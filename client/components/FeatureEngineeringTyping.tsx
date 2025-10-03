@@ -40,23 +40,21 @@ const FeatureEngineeringTyping = () => {
   }, [charIndex, isDeleting, currentPhraseIndex]);
 
   return (
-    <div className="relative min-h-screen bg-gray-100 dark:bg-gray-900">
-      {/* Background Image Section (visible on large screens) */}
-      <div className="relative hidden lg:block w-full h-screen">
-        <Image
-          src="/ai.jpg"
-          alt="Data Visualization"
-          fill
-          className="object-cover brightness-50 dark:brightness-[0.2]"
-          priority
-        />
+    <div className="relative w-full h-screen">
+      {/* Background image */}
+      <Image
+        src="/ai.jpg"
+        alt="Data Visualization"
+        fill
+        className="object-cover brightness-50 dark:brightness-[0.2]"
+        priority
+      />
 
-        {/* Typing Animation Wrapper (overlaid on image) */}
-        <div className="absolute inset-0 flex items-center justify-center z-10">
-          <div className="text-4xl font-mono text-white whitespace-nowrap">
-            {displayedText}
-            <span className="border-r-4 border-white animate-pulse ml-1"></span>
-          </div>
+      {/* Centered typing effect */}
+      <div className="absolute inset-0 flex items-center justify-center z-10">
+        <div className="text-4xl font-mono text-white whitespace-nowrap">
+          {displayedText}
+          <span className="border-r-4 border-white animate-pulse ml-1"></span>
         </div>
       </div>
     </div>
