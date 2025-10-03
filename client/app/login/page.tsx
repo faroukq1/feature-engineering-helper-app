@@ -1,7 +1,8 @@
-import { GalleryVerticalEnd } from "lucide-react";
+import { Atom } from "lucide-react";
 
 import { LoginForm } from "@/components/login-form";
 import FeatureEngineeringTyping from "@/components/FeatureEngineeringTyping";
+import { ToggleModeButton } from "@/components/ToggleModeButton";
 
 export default function LoginPage() {
   return (
@@ -10,9 +11,9 @@ export default function LoginPage() {
         <div className="flex justify-center gap-2 md:justify-start">
           <a href="#" className="flex items-center gap-2 font-medium">
             <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-              <GalleryVerticalEnd className="size-4" />
+              <Atom className="size-4" />
             </div>
-            Acme Inc.
+            Feature Engineering Helper App
           </a>
         </div>
         <div className="flex flex-1 items-center justify-center">
@@ -21,12 +22,10 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-      <div className="bg-muted relative hidden lg:block">
-        <img
-          src="/placeholder.svg"
-          alt="Image"
-          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-        />
+      <div className="relative bg-muted hidden lg:block">
+        <div className="absolute top-5 right-5 z-10">
+          <ToggleModeButton />
+        </div>
         <FeatureEngineeringTyping />
       </div>
     </div>
