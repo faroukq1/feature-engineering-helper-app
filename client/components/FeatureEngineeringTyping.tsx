@@ -46,7 +46,7 @@ const FeatureEngineeringTyping = () => {
         src="/ai.jpg"
         alt="Data Visualization"
         fill
-        className="object-cover brightness-50 dark:brightness-[0.2]"
+        className="object-cover brightness-50 dark:brightness-[0.4]"
         priority
       />
 
