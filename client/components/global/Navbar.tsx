@@ -1,28 +1,37 @@
 import React, { useState } from "react";
-import { Home, RefreshCw, Wrench, Merge } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Home, Wrench, Database } from "lucide-react";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const navItems = [
-  { icon: Home, label: "Dashboard", active: true },
-  { icon: Wrench, label: "Operations", active: false },
-  { icon: Merge, label: "Fusion", active: false },
+  { icon: Home, label: "Dashboard", active: true, href: "/" },
+  {
+    icon: Wrench,
+    label: "Operations",
+    active: false,
+    href: "/dashboard/operations",
+  },
+  { icon: Database, label: "Fusion", active: false, href: "/fusion" },
 ];
-export default function ExpandableNavbar() {
+export default function Navbar() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
     <div className="flex items-center justify-center">
       <nav className="bg-background border border-border rounded-md px-2 py-2 flex items-center gap-1">
         {navItems.map((item, index) => (
-          <Button
+          <Link
+            href={item.href}
             key={index}
-            variant="ghost"
-            size="icon"
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(null)}
             className={cn(
-              "flex items-center justify-center gap-3 rounded-md transition-all duration-300 h-12",
+              buttonVariants({
+                variant: "ghost",
+                size: "icon",
+              }),
+              "flex items-center justify-center gap-3 rounded-md transition-all duration-600 h-12",
               hoveredIndex === index && "px-4 w-auto",
               hoveredIndex !== index && "w-11 px-0",
               item.active
@@ -38,7 +47,7 @@ export default function ExpandableNavbar() {
             />
             <span
               className={cn(
-                "text-sm font-medium whitespace-nowrap transition-all duration-300",
+                "text-sm font-medium whitespace-nowrap transition-all duration-600",
                 item.active ? "text-foreground" : "text-muted-foreground",
                 hoveredIndex === index
                   ? "opacity-100 max-w-xs"
@@ -47,7 +56,7 @@ export default function ExpandableNavbar() {
             >
               {item.label}
             </span>
-          </Button>
+          </Link>
         ))}
       </nav>
     </div>

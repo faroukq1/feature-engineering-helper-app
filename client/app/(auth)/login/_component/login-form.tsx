@@ -39,7 +39,7 @@ export function LoginForm({
 
     if (values.email === email && values.password === password) {
       localStorage.setItem("user", "true");
-      router.push("/");
+      router.push("/dashboard");
     }
 
     if (props.onSubmit) {
