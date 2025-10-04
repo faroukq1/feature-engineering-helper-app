@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { buttonVariants } from "@/components/ui/button";
-import Link from "next/link";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { ToggleModeButton } from "@/components/global/ToggleModeButton";
+import { Atom, LogOut } from "lucide-react";
+import Navbar from "@/components/global/Navbar";
+import { Separator } from "@/components/ui/separator";
 
 const DashboardPage = () => {
   const router = useRouter();
@@ -18,6 +21,10 @@ const DashboardPage = () => {
     }
   }, [router]);
 
+  const logOut = () => {
+    localStorage.removeItem("user");
+    router.push("/login");
+  };
   if (isAuthenticated === null) {
     return (
       <div className="h-screen flex justify-center items-center">
@@ -31,19 +38,27 @@ const DashboardPage = () => {
   }
 
   return (
-    <div className="h-screen flex justify-center items-center">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold mb-4">Welcome to Dashboard!</h1>
-        <p className="text-muted-foreground mb-4">You are logged in.</p>
-        <Link
-          className={buttonVariants({
-            variant: "outline",
-          })}
-          href="/login"
-        >
-          Go to Login (for testing)
-        </Link>
+    <div className="relative">
+      <div className="px-10 py-4 flex justify-between">
+        <div className="flex-1 flex items-center gap-2">
+          <Atom />
+          <div className="flex-1">
+            <Navbar />
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <ToggleModeButton />
+          <Button
+            variant="destructive"
+            size="icon"
+            className="cursor-pointer"
+            onClick={logOut}
+          >
+            <LogOut className="size-4" />
+          </Button>
+        </div>
       </div>
+      <Separator className="my-2" />
     </div>
   );
 };

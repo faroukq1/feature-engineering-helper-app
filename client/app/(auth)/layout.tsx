@@ -1,8 +1,8 @@
 "use client";
 
+import FeatureEngineeringTyping from "@/components/global/FeatureEngineeringTyping";
+import { ToggleModeButton } from "@/components/global/ToggleModeButton";
 import { Atom } from "lucide-react";
-import { ToggleModeButton } from "@/components/ToggleModeButton";
-import FeatureEngineeringTyping from "@/components/FeatureEngineeringTyping";
 
 export default function AuthLayout({
   children,
