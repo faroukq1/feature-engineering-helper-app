@@ -5,14 +5,14 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 const navItems = [
-  { icon: Home, label: "Dashboard", active: true, href: "/" },
+  { icon: Home, label: "Dashboard", active: true, href: "/dashboard" },
   {
     icon: Wrench,
     label: "Operations",
     active: false,
     href: "/dashboard/operations",
   },
-  { icon: Database, label: "Fusion", active: false, href: "/fusion" },
+  { icon: Database, label: "Fusion", active: false, href: "/dashboard/fusion" },
 ];
 export default function Navbar() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
