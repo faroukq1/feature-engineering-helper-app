@@ -12,14 +12,9 @@ import React from "react";
 interface DisplayDataSetProps {
   data: any[];
   fileName: string;
-  onFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const DisplayDataSet: React.FC<DisplayDataSetProps> = ({
-  data,
-  fileName,
-  onFileUpload,
-}) => {
+const DisplayDataSet: React.FC<DisplayDataSetProps> = ({ data, fileName }) => {
   return (
     <div className="border min-h-[490px] max-h-[490px] w-full rounded-sm flex flex-col p-4">
       {data.length > 0 ? (
@@ -73,18 +68,6 @@ const DisplayDataSet: React.FC<DisplayDataSetProps> = ({
             No dataset loaded
           </span>
           <span>Select a CSV or Excel file from your computer.</span>
-
-          <div className="w-full space-y-2">
-            <input
-              type="file"
-              accept=".csv,.xlsx,.xls"
-              onChange={onFileUpload}
-              className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 cursor-pointer"
-            />
-            <p className="text-xs text-muted-foreground">
-              Supported formats: CSV, XLSX, XLS
-            </p>
-          </div>
         </div>
       )}
     </div>

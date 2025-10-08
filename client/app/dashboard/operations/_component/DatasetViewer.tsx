@@ -1,79 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Database } from "lucide-react";
-import * as XLSX from "xlsx";
-import React, { useState } from "react";
-import { parseCSV } from "@/lib/utils";
 import DisplayDataSet from "./DisplayDataSet";
+import { useDatasetStore } from "@/store/useDatasetStore";
 
 const DatasetViewer = () => {
-  const [mode, setMode] = useState("Data Set");
-  const [data, setData] = useState<any[]>([]);
-  const [fileName, setFileName] = useState("");
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) {
-      return;
-    }
-    setFileName(file.name);
-
-    if (file.name.endsWith(".csv")) {
-      const reader = new FileReader();
-
-      reader.onload = (event) => {
-        const text = event.target?.result as string;
-
-        try {
-          const parsedData = parseCSV(text);
-          setData(parsedData);
-        } catch (error) {
-          console.error("Error parsing CSV:", error);
-          alert("Error parsing CSV: " + error);
-        }
-      };
-
-      reader.onerror = (error) => {
-        console.error("FileReader error:", error);
-        alert("Error reading file");
-      };
-
-      reader.readAsText(file);
-    } else if (file.name.endsWith(".xlsx") || file.name.endsWith(".xls")) {
-      const reader = new FileReader();
-
-      reader.onload = (event) => {
-        try {
-          const arrayBuffer = event.target?.result as ArrayBuffer;
-
-          const data = new Uint8Array(arrayBuffer);
-          const workbook = XLSX.read(data, { type: "array" });
-          const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-          const json = XLSX.utils.sheet_to_json(worksheet);
-
-          const filteredData = json.filter((row: any) => {
-            const values = Object.values(row);
-            return values.some(
-              (val) => val !== null && val !== undefined && val !== ""
-            );
-          });
-
-          setData(filteredData);
-        } catch (error) {
-          alert("Error parsing Excel file: " + error);
-        }
-      };
-
-      reader.onerror = (error) => {
-        console.error("FileReader error:", error);
-        alert("Error reading file");
-      };
-
-      reader.readAsArrayBuffer(file);
-    } else {
-      alert("Please upload a CSV or Excel file (.csv, .xlsx, .xls)");
-    }
-  };
+  const { mode, setMode, data, fileName, clearDataset } = useDatasetStore();
 
   const handleSubmit = () => {
     console.log("Submitting data:", data);
@@ -113,11 +45,7 @@ const DatasetViewer = () => {
         </Tabs>
 
         {/* Dataset Display Component */}
-        <DisplayDataSet
-          data={data}
-          fileName={fileName}
-          onFileUpload={handleFileUpload}
-        />
+        <DisplayDataSet data={data} fileName={fileName} />
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
@@ -125,13 +53,7 @@ const DatasetViewer = () => {
             Submit
           </Button>
           {data.length > 0 && (
-            <Button
-              variant="outline"
-              onClick={() => {
-                setData([]);
-                setFileName("");
-              }}
-            >
+            <Button variant="outline" onClick={() => clearDataset()}>
               Clear Dataset
             </Button>
           )}
