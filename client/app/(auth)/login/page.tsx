@@ -1,5 +1,3 @@
-"use client";
-
 import { LoginForm } from "./_component/login-form";
 
 export default function LoginPage() {

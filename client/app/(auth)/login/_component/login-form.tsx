@@ -18,13 +18,19 @@ import Link from "next/link";
 import { loginSchema } from "@/lib/schemas/loginSchema";
 import z from "zod";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
   const router = useRouter();
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
   const user = localStorage.getItem("user");
+
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -33,23 +39,48 @@ export function LoginForm({
     },
   });
 
-  function onSubmit(values: z.infer<typeof loginSchema>) {
-    const email = "farouk@gmail.com";
-    const password = "farouk123";
+  async function onSubmit(values: z.infer<typeof loginSchema>) {
+    setLoading(true);
+    setError(null);
 
-    if (values.email === email && values.password === password) {
-      localStorage.setItem("user", "true");
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/login`,
+        {
+          email: values.email,
+          password: values.password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = response.data;
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          email: values.email,
+          firstname: data.firstname,
+          lastname: data.lastname,
+        })
+      );
+
       router.push("/dashboard");
-    }
-
-    if (props.onSubmit) {
-      props.onSubmit({ ...values } as any);
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        const errorMessage = err.response?.data?.detail || "Login failed";
+        setError(errorMessage);
+      } else {
+        setError("An error occurred during login");
+      }
+    } finally {
+      setLoading(false);
     }
   }
 
-  if (user !== null) {
-    router.push("/");
-  }
   return (
     <Form {...form}>
       <form
@@ -63,6 +94,11 @@ export function LoginForm({
             Enter your email below to login to your account
           </p>
         </div>
+        {error && (
+          <div className="p-3 bg-red-50 border border-red-200 text-red-800 rounded text-sm">
+            {error}
+          </div>
+        )}
         <div className="grid gap-3">
           <FormField
             control={form.control}
@@ -71,7 +107,12 @@ export function LoginForm({
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="m@example.com" {...field} />
+                  <Input
+                    type="email"
+                    placeholder="m@example.com"
+                    disabled={loading}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -84,14 +125,14 @@ export function LoginForm({
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" {...field} />
+                  <Input type="password" disabled={loading} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full">
-            Login
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
           </Button>
           <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
             <span className="bg-background text-muted-foreground relative z-10 px-2">
@@ -102,6 +143,7 @@ export function LoginForm({
             variant="outline"
             className="w-full"
             type="button"
+            disabled={loading}
             onClick={() => {
               /* handle GitHub oauth trigger here */
             }}
