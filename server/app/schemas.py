@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from fastapi import UploadFile
+from enum import Enum
 
 class UserCreate(BaseModel):
     firstname: str
@@ -11,13 +12,19 @@ class UserLogin(BaseModel):
     email : str
     password : str
 
-class CleanDataDownload(BaseModel):
+
+class MissingDataStrategy(str, Enum):
+    FILL_VALUE = "fill_value"
+    INTERPOLATE = "interpolate"
+    MEAN = "mean"
+    MEDIAN = "median"
+    MODE = "mode"
+    ZERO = "zero"
+    REMOVE_ROWS = "remove_rows"
+
+class DatasetOperations(BaseModel):
     file: UploadFile
-    missing_data: bool = False
-    missing_data_strategy: str = "remove_rows"
-    normalization: bool = False
-    standardization: bool = False
-    remove_duplicates: bool = False
 
     class Config:
         arbitrary_types_allowed = True
+
