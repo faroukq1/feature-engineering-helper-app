@@ -18,6 +18,10 @@ import Link from "next/link";
 import { registerSchema } from "@/lib/schemas/registerSchema";
 import { strengthConfigType } from "@/types/authPageTypes";
 import z from "zod";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 // Map score to label and color for styling
 const strengthConfig: strengthConfigType = {
@@ -33,6 +37,11 @@ export function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
+  const router = useRouter();
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+  const [success, setSuccess] = React.useState(false);
+
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -48,11 +57,41 @@ export function RegisterForm({
   const password = form.watch("password");
   const strengthScore = calculatePasswordStrength(password);
 
-  function onSubmit(values: z.infer<typeof registerSchema>) {
-    const { confirmPassword, ...submitData } = values;
-    console.log(submitData); // Replace with API call or your logic
-    if (props.onSubmit) {
-      props.onSubmit({ ...values } as any);
+  async function onSubmit(values: z.infer<typeof registerSchema>) {
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
+
+    try {
+      // Call your FastAPI backend using axios
+      const response = await axios.post(
+        `${API_BASE_URL}/users/`,
+        {
+          firstname: values.firstName,
+          lastname: values.lastName,
+          email: values.email,
+          password: values.password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log(response);
+      setSuccess(true);
+      form.reset();
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        const errorMessage =
+          err.response?.data?.detail || "Registration failed";
+        setError(errorMessage);
+      } else {
+        setError("An error occurred during registration");
+      }
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -67,6 +106,18 @@ export function RegisterForm({
           <h1 className="text-2xl font-bold">Create an account</h1>
         </div>
 
+        {error && (
+          <div className="p-3 bg-red-50 border border-red-200 text-red-800 rounded text-sm">
+            {error}
+          </div>
+        )}
+
+        {success && (
+          <div className="p-3 bg-green-50 border border-green-200 text-green-800 rounded text-sm">
+            Account created successfully! Redirecting to login...
+          </div>
+        )}
+
         <div className="grid gap-2">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <FormField
@@ -76,7 +127,7 @@ export function RegisterForm({
                 <FormItem>
                   <FormLabel>First name</FormLabel>
                   <FormControl>
-                    <Input placeholder="John" {...field} />
+                    <Input placeholder="John" disabled={loading} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -89,7 +140,7 @@ export function RegisterForm({
                 <FormItem>
                   <FormLabel>Last name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Doe" {...field} />
+                    <Input placeholder="Doe" disabled={loading} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -104,7 +155,12 @@ export function RegisterForm({
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="m@example.com" {...field} />
+                  <Input
+                    type="email"
+                    placeholder="m@example.com"
+                    disabled={loading}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -118,7 +174,7 @@ export function RegisterForm({
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" {...field} />
+                  <Input type="password" disabled={loading} {...field} />
                 </FormControl>
                 <FormMessage />
                 {/* Password Strength Indicator */}
@@ -153,15 +209,23 @@ export function RegisterForm({
               <FormItem>
                 <FormLabel>Confirm password</FormLabel>
                 <FormControl>
-                  <Input type="password" {...field} />
+                  <Input type="password" disabled={loading} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <Button type="submit" className="w-full">
-            Create account
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={loading || success}
+          >
+            {loading
+              ? "Creating account..."
+              : success
+              ? "Account created!"
+              : "Create account"}
           </Button>
 
           <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
@@ -174,6 +238,7 @@ export function RegisterForm({
             variant="outline"
             className="w-full"
             type="button"
+            disabled={loading}
             onClick={() => {
               /* handle GitHub oauth trigger here */
             }}
@@ -181,7 +246,7 @@ export function RegisterForm({
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
-              className="mr-2"
+              className="mr-2 h-5 w-5"
             >
               <path
                 d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
