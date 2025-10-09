@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useDatasetStore } from "@/store/useDatasetStore";
 import { FileWarning } from "lucide-react";
 import React from "react";
 
@@ -14,15 +15,12 @@ interface DisplayDataSetProps {
   fileName: string;
 }
 
-const DisplayDataSet: React.FC<DisplayDataSetProps> = ({ data, fileName }) => {
+const DisplayDataSet = () => {
+  const { data } = useDatasetStore();
   return (
-    <div className="border min-h-[490px] max-h-[490px] w-full rounded-sm flex flex-col p-4">
+    <div className="min-h-[490px] max-h-[490px] w-full rounded-sm flex flex-col">
       {data.length > 0 ? (
         <div className="flex flex-col h-full min-h-0">
-          <div className="mb-3 text-sm text-muted-foreground flex-shrink-0">
-            <span className="font-medium text-foreground">{fileName}</span> (
-            {data.length} rows)
-          </div>
           <div className="flex-1 overflow-auto border rounded-md min-h-0">
             <Table className="min-w-max">
               <TableHeader>

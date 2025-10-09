@@ -1,11 +1,17 @@
 import React, { useState } from "react";
-import { Home, Wrench, Database } from "lucide-react";
+import { Home, Wrench, Database, FileSpreadsheet } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 const navItems = [
   { icon: Home, label: "Dashboard", active: true, href: "/dashboard" },
+  {
+    icon: FileSpreadsheet,
+    label: "Create dataset",
+    active: false,
+    href: "/dashboard/create",
+  },
   {
     icon: Wrench,
     label: "Operations",

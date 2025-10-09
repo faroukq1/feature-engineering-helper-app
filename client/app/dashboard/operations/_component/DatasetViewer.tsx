@@ -6,7 +6,6 @@ import { useDatasetStore } from "@/store/useDatasetStore";
 
 const DatasetViewer = () => {
   const { mode, setMode, data, fileName, clearDataset } = useDatasetStore();
-
   const handleSubmit = () => {
     console.log("Submitting data:", data);
   };
@@ -16,36 +15,18 @@ const DatasetViewer = () => {
       <div className="flex h-full flex-col space-y-4">
         {/* Mode Tabs */}
         <Tabs value={mode} onValueChange={setMode}>
-          <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
+          <TabsList className="w-1/3">
             <TabsTrigger value="Data Set">
               <p className="flex items-center gap-2">
                 <Database className="h-4 w-4" />
-                Data Set
+                {`Data Set (${fileName})`}
               </p>
-            </TabsTrigger>
-            <TabsTrigger value="insert">
-              <span className="flex items-center gap-2">
-                <svg
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-                Insert
-              </span>
             </TabsTrigger>
           </TabsList>
         </Tabs>
 
         {/* Dataset Display Component */}
-        <DisplayDataSet data={data} fileName={fileName} />
+        <DisplayDataSet />
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
