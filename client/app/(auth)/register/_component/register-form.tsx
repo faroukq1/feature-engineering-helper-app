@@ -21,9 +21,7 @@ import z from "zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-
-// Map score to label and color for styling
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const strengthConfig: strengthConfigType = {
   0: { label: "No Password", color: "bg-gray-300" },
   1: { label: "Very Weak", color: "bg-red-500" },

@@ -1,75 +1,45 @@
 import { Button } from "@/components/ui/button";
 import { parseCSV } from "@/lib/utils";
 import { Upload } from "lucide-react";
+import axios from "axios";
 import * as XLSX from "xlsx";
 import React from "react";
 import { useDatasetStore } from "@/store/useDatasetStore";
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const OperationHeader = () => {
-  const { setData, setFileName } = useDatasetStore();
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const { setData, setFileName, setLoading } = useDatasetStore();
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) {
-      return;
-    }
+    if (!file) return;
+
     setFileName(file.name);
+    setLoading(true);
 
-    if (file.name.endsWith(".csv")) {
-      const reader = new FileReader();
+    const formData = new FormData();
+    formData.append("file", file);
 
-      reader.onload = (event) => {
-        const text = event.target?.result as string;
-
-        try {
-          const parsedData = parseCSV(text);
-          setData(parsedData);
-        } catch (error) {
-          console.error("Error parsing CSV:", error);
-          alert("Error parsing CSV: " + error);
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/jsonify-dataset`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
-      };
+      );
 
-      reader.onerror = (error) => {
-        console.error("FileReader error:", error);
-        alert("Error reading file");
-      };
-
-      reader.readAsText(file);
-    } else if (file.name.endsWith(".xlsx") || file.name.endsWith(".xls")) {
-      const reader = new FileReader();
-
-      reader.onload = (event) => {
-        try {
-          const arrayBuffer = event.target?.result as ArrayBuffer;
-
-          const data = new Uint8Array(arrayBuffer);
-          const workbook = XLSX.read(data, { type: "array" });
-          const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-          const json = XLSX.utils.sheet_to_json(worksheet);
-
-          const filteredData = json.filter((row: any) => {
-            const values = Object.values(row);
-            return values.some(
-              (val) => val !== null && val !== undefined && val !== ""
-            );
-          });
-
-          setData(filteredData);
-        } catch (error) {
-          alert("Error parsing Excel file: " + error);
-        }
-      };
-
-      reader.onerror = (error) => {
-        console.error("FileReader error:", error);
-        alert("Error reading file");
-      };
-
-      reader.readAsArrayBuffer(file);
-    } else {
-      alert("Please upload a CSV or Excel file (.csv, .xlsx, .xls)");
+      setData(response.data);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      alert("Error uploading or processing file");
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
     <div className="border-b px-6 py-4">
       <div className="flex items-center justify-between">

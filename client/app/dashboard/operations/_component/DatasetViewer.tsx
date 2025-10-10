@@ -19,7 +19,7 @@ const DatasetViewer = () => {
             <TabsTrigger value="Data Set">
               <p className="flex items-center gap-2">
                 <Database className="h-4 w-4" />
-                {`Data Set (${fileName})`}
+                {`Data Set (${fileName ? fileName : "empty"})`}
               </p>
             </TabsTrigger>
           </TabsList>

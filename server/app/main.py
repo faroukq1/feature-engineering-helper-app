@@ -79,8 +79,23 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
         "email": db_user.email
     }
 
+@app.post('/jsonify-dataset')
+async def jsonify_dataset(file : UploadFile = File(...)):
+    content = await file.read()
+    file_extension = file.filename.rsplit('.', 1)[-1].lower()
+
+    if file_extension == 'csv':
+        df = pd.read_csv(io.BytesIO(content))
+    elif file_extension in ['xls', 'xlsx']:
+        df = pd.read_excel(io.BytesIO(content))
+    else :
+        return {'error' : "Please upload CSV or Excel (.xlsx)"}
+    
+    return df.to_dict(orient='records')
+    
 
 
+## working on this
 @app.post('/process')
 async def manipulate_data_set(file : UploadFile = File(...)):
     content = await file.read()
@@ -93,4 +108,4 @@ async def manipulate_data_set(file : UploadFile = File(...)):
     else :
         return {'error' : "Please upload CSV or Excel (.xlsx)"}
     
-    return df
+    return df.to_dict(orient='records')

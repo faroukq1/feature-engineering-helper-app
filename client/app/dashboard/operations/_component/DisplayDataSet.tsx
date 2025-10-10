@@ -7,16 +7,23 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useDatasetStore } from "@/store/useDatasetStore";
-import { FileWarning } from "lucide-react";
+import { FileWarning, Loader } from "lucide-react";
 import React from "react";
 
-interface DisplayDataSetProps {
-  data: any[];
-  fileName: string;
-}
-
 const DisplayDataSet = () => {
-  const { data } = useDatasetStore();
+  const { data, loading } = useDatasetStore();
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-[490px]">
+        <Loader className="h-8 w-8 animate-spin text-primary" />
+        <span className="ml-3 text-sm text-muted-foreground">
+          Processing file...
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-[490px] max-h-[490px] w-full rounded-sm flex flex-col">
       {data.length > 0 ? (
