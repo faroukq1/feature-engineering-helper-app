@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { parseCSV } from "@/lib/utils";
 import { Upload } from "lucide-react";
 import axios from "axios";
-import * as XLSX from "xlsx";
 import React from "react";
 import { useDatasetStore } from "@/store/useDatasetStore";
 
@@ -13,10 +11,9 @@ const OperationHeader = () => {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     setFileName(file.name);
     setLoading(true);
-
+    console.log(file);
     const formData = new FormData();
     formData.append("file", file);
 
@@ -32,6 +29,7 @@ const OperationHeader = () => {
       );
 
       setData(response.data);
+      console.log(JSON.stringify(response.data, null, 2));
     } catch (error) {
       console.error("Error uploading file:", error);
       alert("Error uploading or processing file");

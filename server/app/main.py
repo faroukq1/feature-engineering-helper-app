@@ -9,6 +9,8 @@ from app.database import engine, SessionLocal
 import pandas as pd
 import io, json
 import numpy as np
+from typing import List, Dict, Any
+
 
 app = FastAPI(title="Data Processing API")
 
@@ -99,9 +101,8 @@ async def jsonify_dataset(file : UploadFile = File(...)):
     
 
 
-## working on this
 
-@app.post("/process")
+@app.post("/file-process")
 async def process_file(
     file: UploadFile = File(...),
     config: str = Form(...),
@@ -123,8 +124,7 @@ async def process_file(
         
         # make df readle by fastAPI
         df = make_dataframe_json_safe(df)
-        # handle nan values
-        df = df.replace({np.nan : None})
+
         # Parse config
         config_data = json.loads(config)
         parsed_config = DataProcessingConfig(**config_data)
@@ -142,3 +142,38 @@ async def process_file(
         return {"error": "Invalid JSON in config"}
     except Exception as e:
         return {"error": str(e)}
+    
+@app.post("/json-process")
+async def process_file(data: List[Dict[str, Any]], config: dict = None):
+    try:
+        if not data:
+            raise HTTPException(status_code=400, detail="Data array cannot be empty")
+        
+        # Convert JSON array to DataFrame
+        df = pd.DataFrame(data)
+        
+        # Make df readable by FastAPI
+        df = make_dataframe_json_safe(df)
+        
+        # Handle nan values
+        df = df.replace({np.nan: None})
+        
+        # Parse config if provided
+        parsed_config = None
+        if config:
+            parsed_config = DataProcessingConfig(**config)
+            # operations based on given queries
+            df = preprocess_dataframe(df, parsed_config)
+        
+        return {
+            "config": parsed_config.model_dump() if parsed_config else None,
+            "data": df.to_dict(orient="records"),
+            "row_count": len(df)
+        }
+    
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=f"Invalid data format: {str(e)}")
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Invalid JSON in config")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

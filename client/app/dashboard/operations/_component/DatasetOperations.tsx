@@ -30,6 +30,7 @@ import {
   DatasetPreprocessingSchema,
   DatasetPreprocessingType,
 } from "@/lib/schemas/DatasetPreprocessingSchema";
+import axios from "axios";
 
 export default function DataCleaningOperations() {
   const fillOptions = ["mean", "median", "mode", "zero"];
@@ -46,7 +47,7 @@ export default function DataCleaningOperations() {
     },
   });
 
-  const onSubmit = (values: DatasetPreprocessingType) => {
+  const onSubmit = async (values: DatasetPreprocessingType) => {
     const payload = {
       missing_data:
         values.missingDataType === "none"
@@ -68,7 +69,13 @@ export default function DataCleaningOperations() {
       standarization: values.standarization,
       remove_deplicate: values.remove_deplicate,
     };
-    console.log(JSON.stringify(payload, null, 2));
+
+    try {
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/process`;
+      // const response = await axios.post(url, )
+    } catch {
+    } finally {
+    }
   };
 
   const missingDataType = form.watch("missingDataType");
