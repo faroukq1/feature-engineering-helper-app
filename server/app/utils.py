@@ -79,7 +79,6 @@ def preprocess_dataframe(df: pd.DataFrame, config) -> pd.DataFrame:
 
     return df
 
-import pandas as pd
 
 def apply_fill_values(df: pd.DataFrame, fill_values_config: dict) -> pd.DataFrame:
     """
