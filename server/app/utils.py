@@ -79,7 +79,7 @@ def preprocess_dataframe(df: pd.DataFrame, config) -> pd.DataFrame:
 
     return df
 
-
+import pandas as pd
 
 def apply_fill_values(df: pd.DataFrame, fill_values_config: dict) -> pd.DataFrame:
     """
@@ -87,35 +87,37 @@ def apply_fill_values(df: pd.DataFrame, fill_values_config: dict) -> pd.DataFram
     Handles numeric and categorical columns safely.
     """
     df = df.copy()
-    numeric_cols = df.select_dtypes(include=['number']).columns
-    categorical_cols = df.select_dtypes(exclude=['number']).columns
-
     if not fill_values_config:
         print("ℹ️ No fill_values config provided.", flush=True)
         return df
 
+    # Ensure numeric columns are properly detected
+    df = df.apply(lambda col: pd.to_numeric(col, errors='ignore'))
+    numeric_cols = df.select_dtypes(include=['number']).columns
+    all_cols = df.columns
+
     # Mean
-    if fill_values_config.get("mean"):
+    if fill_values_config.get("mean", False):
         for col in numeric_cols:
             df[col] = df[col].fillna(df[col].mean())
         print(f"✅ Filled NaN with MEAN for: {list(numeric_cols)}", flush=True)
 
     # Median
-    if fill_values_config.get("median"):
+    if fill_values_config.get("median", False):
         for col in numeric_cols:
             df[col] = df[col].fillna(df[col].median())
         print(f"✅ Filled NaN with MEDIAN for: {list(numeric_cols)}", flush=True)
 
-    # Mode (works for all types)
-    if fill_values_config.get("mode"):
-        for col in df.columns:
+    # Mode (works for all columns)
+    if fill_values_config.get("mode", False):
+        for col in all_cols:
             mode_val = df[col].mode()
             if not mode_val.empty:
                 df[col] = df[col].fillna(mode_val[0])
         print(f"✅ Filled NaN with MODE for all columns.", flush=True)
 
     # Zero (numeric only)
-    if fill_values_config.get("zero"):
+    if fill_values_config.get("zero", False):
         for col in numeric_cols:
             df[col] = df[col].fillna(0)
         print(f"✅ Filled NaN with ZERO for: {list(numeric_cols)}", flush=True)
@@ -135,22 +137,33 @@ def handle_missing_data(df: pd.DataFrame, missing_data_config: dict) -> pd.DataF
         return df
 
     # --- Remove Rows ---
-    if missing_data_config.get("remove_rows"):
+    if missing_data_config.get("remove_rows", False):
         before = len(df)
         df = df.dropna()
         print(f"✅ Removed rows with missing values: {before - len(df)} rows removed.", flush=True)
 
     # --- Interpolate (numeric only) ---
-    if missing_data_config.get("interpolate"):
-        numeric_cols = df.select_dtypes(include=['number']).columns
-        if len(numeric_cols) > 0:
-            df[numeric_cols] = df[numeric_cols].interpolate(method='linear', limit_direction='both')
-            print(f"✅ Interpolated numeric columns: {list(numeric_cols)}", flush=True)
-        else:
-            print("⚠️ No numeric columns found for interpolation.", flush=True)
+    if missing_data_config.get("interpolate", False):
+        try:
+            # Convert columns that can be numeric
+            df = df.apply(lambda col: pd.to_numeric(col, errors='ignore'))
+            numeric_cols = df.select_dtypes(include=['number']).columns
+
+            if len(numeric_cols) > 0:
+                df[numeric_cols] = df[numeric_cols].interpolate(
+                    method='linear',
+                    limit_direction='both'
+                )
+                print(f"✅ Interpolated numeric columns: {list(numeric_cols)}", flush=True)
+            else:
+                print("⚠️ No numeric columns found for interpolation.", flush=True)
+
+        except Exception as e:
+            print(f"❌ Error during interpolation: {e}", flush=True)
 
     # --- Fill Values ---
-    if missing_data_config.get("fill_values"):
-        df = apply_fill_values(df, missing_data_config.get("fill_values"))
+    fill_values_config = missing_data_config.get("fill_values")
+    if fill_values_config:
+        df = apply_fill_values(df, fill_values_config)
 
     return df
