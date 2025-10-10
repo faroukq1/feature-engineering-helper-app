@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-from fastapi import UploadFile
+from fastapi import UploadFile, Form
+from typing import Optional
 from enum import Enum
 
 class UserCreate(BaseModel):
@@ -27,4 +28,24 @@ class DatasetOperations(BaseModel):
 
     class Config:
         arbitrary_types_allowed = True
+
+
+class FillValues(BaseModel):
+    mean: Optional[bool] = None
+    median: Optional[bool] = None
+    mode: Optional[bool] = None
+    zero: Optional[bool] = None
+
+
+class MissingData(BaseModel):
+    remove_rows: Optional[bool] = None
+    interpolate: Optional[bool] = None
+    fill_values: Optional[FillValues] = None
+
+
+class DataProcessingConfig(BaseModel):
+    missing_data: Optional[MissingData] = None
+    normalization: Optional[bool] = None
+    standarization: Optional[bool] = None
+    remove_deblicate: Optional[bool] = None
 
