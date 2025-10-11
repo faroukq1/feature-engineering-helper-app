@@ -8,7 +8,7 @@ const navItems = [
   { icon: Home, label: "Dashboard", active: true, href: "/dashboard" },
   {
     icon: FileSpreadsheet,
-    label: "Create dataset",
+    label: "Create",
     active: false,
     href: "/dashboard/create",
   },

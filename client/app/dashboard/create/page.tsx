@@ -286,7 +286,7 @@ export default function DatasetCreator() {
                   </div>
                   {tempAttributes.length > 1 && (
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="icon"
                       onClick={() => removeTempAttribute(attr.id)}
                       className="text-zinc-400 hover:bg-zinc-900 hover:text-white"
