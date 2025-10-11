@@ -157,20 +157,18 @@ export default function page() {
   const columnsMatch = canFuse();
 
   return (
-    <div className="w-full bg-black text-white p-8">
+    <div className="w-full text-white p-8">
       <div className="space-y-8">
-        <div>
+        <div className="text-black dark:text-white">
           <h1 className="text-3xl font-bold mb-2">Fuse Datasets</h1>
-          <p className="text-zinc-400">
-            Upload multiple CSV files and merge them into one dataset
-          </p>
+          <p>Upload multiple CSV files and merge them into one dataset</p>
         </div>
 
         {/* Top Section - Upload & File Management */}
-        <Card className="bg-zinc-950 border-zinc-800">
+        <Card>
           <CardHeader>
-            <CardTitle className="text-white">Upload CSV Files</CardTitle>
-            <CardDescription className="text-zinc-400">
+            <CardTitle>Upload CSV Files</CardTitle>
+            <CardDescription>
               Drag and drop CSV files or click to select. All files must have
               identical columns.
             </CardDescription>
@@ -188,17 +186,10 @@ export default function page() {
               }`}
             >
               <Upload className="w-12 h-12 mx-auto mb-4 text-zinc-400" />
-              <p className="text-lg mb-2 text-zinc-300">
-                Drag and drop CSV files here
-              </p>
-              <p className="text-sm text-zinc-500 mb-4">or</p>
+              <p className="text-lg mb-2">Drag and drop CSV files here</p>
+              <p className="text-sm mb-4">or</p>
               <label htmlFor="file-upload">
-                <Button
-                  variant="outline"
-                  className="cursor-pointer border-zinc-700 text-white hover:bg-zinc-800 bg-transparent"
-                >
-                  Select Files
-                </Button>
+                <Button variant="outline">Select Files</Button>
                 <Input
                   id="file-upload"
                   type="file"
@@ -240,21 +231,21 @@ export default function page() {
             {/* File List */}
             {files.length > 0 && (
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-white">
+                <h3 className="text-lg font-semibold">
                   Uploaded Files ({files.length})
                 </h3>
                 <div className="grid grid-cols-3 gap-3">
                   {files.map((file) => (
                     <div
                       key={file.id}
-                      className="flex items-center justify-between p-4 bg-zinc-900 border border-zinc-800 rounded-lg"
+                      className="flex items-center justify-between p-4 border border-zinc-800 rounded-lg"
                     >
                       <div className="flex-1">
-                        <p className="font-medium text-white">{file.name}</p>
-                        <p className="text-sm text-zinc-400">
+                        <p className="font-medium">{file.name}</p>
+                        <p className="text-sm">
                           {file.rows} rows × {file.columns.length} columns
                         </p>
-                        <p className="text-xs text-zinc-500 mt-1">
+                        <p className="text-xs mt-1">
                           Columns: {file.columns.join(", ")}
                         </p>
                       </div>
@@ -263,15 +254,13 @@ export default function page() {
                           variant="outline"
                           size="sm"
                           onClick={() => setPreviewFile(file)}
-                          className="border-zinc-700 text-white hover:bg-zinc-800"
                         >
                           <Eye className="w-4 h-4" />
                         </Button>
                         <Button
-                          variant="outline"
+                          variant="destructive"
                           size="sm"
                           onClick={() => deleteFile(file.id)}
-                          className="border-zinc-700 text-red-400 hover:bg-red-950"
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
@@ -287,7 +276,7 @@ export default function page() {
               <Button
                 onClick={fuseFiles}
                 disabled={!columnsMatch}
-                className="w-full bg-cyan-500 hover:bg-cyan-600 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full disabled:cursor-not-allowed"
               >
                 Fuse Files
               </Button>
@@ -296,10 +285,10 @@ export default function page() {
         </Card>
 
         {/* Bottom Section - Fused Dataset Preview */}
-        <Card className="bg-zinc-950 border-zinc-800">
+        <Card>
           <CardHeader>
-            <CardTitle className="text-white">Fused Dataset</CardTitle>
-            <CardDescription className="text-zinc-400">
+            <CardTitle>Fused Dataset</CardTitle>
+            <CardDescription>
               {fusedData
                 ? `Preview of merged dataset (${fusedData.length} total rows)`
                 : "Upload CSV files to begin"}
@@ -310,17 +299,11 @@ export default function page() {
               <div className="space-y-4">
                 {/* Export Buttons */}
                 <div className="flex gap-3">
-                  <Button
-                    onClick={exportToCSV}
-                    className="bg-cyan-500 hover:bg-cyan-600 text-white"
-                  >
+                  <Button onClick={exportToCSV}>
                     <Download className="w-4 h-4 mr-2" />
                     Export as CSV
                   </Button>
-                  <Button
-                    onClick={exportToExcel}
-                    className="bg-cyan-500 hover:bg-cyan-600 text-white"
-                  >
+                  <Button onClick={exportToExcel}>
                     <Download className="w-4 h-4 mr-2" />
                     Export as Excel
                   </Button>
@@ -369,7 +352,7 @@ export default function page() {
                 </div>
               </div>
             ) : (
-              <div className="text-center py-12 text-zinc-500">
+              <div className="text-center py-12">
                 <Upload className="w-16 h-16 mx-auto mb-4 opacity-50" />
                 <p className="text-lg">No dataset fused yet</p>
                 <p className="text-sm mt-2">
