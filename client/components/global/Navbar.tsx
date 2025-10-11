@@ -1,6 +1,12 @@
 import React, { useState } from "react";
-import { Home, Wrench, Database, FileSpreadsheet } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  Home,
+  Wrench,
+  Database,
+  FileSpreadsheet,
+  ScatterChart,
+} from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
@@ -19,6 +25,12 @@ const navItems = [
     href: "/dashboard/operations",
   },
   { icon: Database, label: "Fusion", active: false, href: "/dashboard/fusion" },
+  {
+    icon: ScatterChart,
+    label: "Visualization",
+    active: false,
+    href: "/dashboard/visualization",
+  },
 ];
 export default function Navbar() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
