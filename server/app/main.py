@@ -151,13 +151,10 @@ async def process_file(data: List[Dict[str, Any]], config: dict = None):
         
         # Convert JSON array to DataFrame
         df = pd.DataFrame(data)
-        
         # Make df readable by FastAPI
         df = make_dataframe_json_safe(df)
-        
         # Handle nan values
         df = df.replace({np.nan: None})
-        
         # Parse config if provided
         parsed_config = None
         if config:

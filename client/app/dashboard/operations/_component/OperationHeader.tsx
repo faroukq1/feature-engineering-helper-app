@@ -13,7 +13,6 @@ const OperationHeader = () => {
     if (!file) return;
     setFileName(file.name);
     setLoading(true);
-    console.log(file);
     const formData = new FormData();
     formData.append("file", file);
 

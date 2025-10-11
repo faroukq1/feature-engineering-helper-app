@@ -31,10 +31,11 @@ import {
   DatasetPreprocessingType,
 } from "@/lib/schemas/DatasetPreprocessingSchema";
 import axios from "axios";
+import { useDatasetStore } from "@/store/useDatasetStore";
 
 export default function DataCleaningOperations() {
+  const { data, setData } = useDatasetStore();
   const fillOptions = ["mean", "median", "mode", "zero"];
-
   const form = useForm<DatasetPreprocessingType>({
     resolver: zodResolver(DatasetPreprocessingSchema),
     defaultValues: {
@@ -69,12 +70,12 @@ export default function DataCleaningOperations() {
       standarization: values.standarization,
       remove_deplicate: values.remove_deplicate,
     };
-
     try {
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/process`;
-      // const response = await axios.post(url, )
-    } catch {
-    } finally {
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/json-process`;
+      const response = await axios.post(url, { data: data, config: payload });
+      setData(response.data.data);
+    } catch (err) {
+      console.log(err);
     }
   };
 
