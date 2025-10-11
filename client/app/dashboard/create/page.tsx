@@ -223,23 +223,21 @@ export default function DatasetCreator() {
   };
 
   return (
-    <div className="w-full bg-black p-4 md:p-8">
+    <div className="w-full p-4 md:p-8">
       <div className="mx-auto">
         <header className="mb-8">
-          <h1 className="text-balance text-4xl font-bold text-white">
-            Dataset Creator
-          </h1>
-          <p className="mt-2 text-zinc-400">
+          <h1 className="text-balance text-4xl font-bold">Dataset Creator</h1>
+          <p className="mt-2">
             Define your schema, add data, and export to CSV or Excel
           </p>
         </header>
 
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Left Side - Schema Builder */}
-          <Card className="border-zinc-800 bg-zinc-950">
+          <Card>
             <CardHeader>
-              <CardTitle className="text-white">Schema Builder</CardTitle>
-              <CardDescription className="text-zinc-400">
+              <CardTitle>Schema Builder</CardTitle>
+              <CardDescription>
                 Define attributes for your dataset
               </CardDescription>
             </CardHeader>
@@ -257,7 +255,7 @@ export default function DatasetCreator() {
                       onChange={(e) =>
                         updateTempAttribute(attr.id, "name", e.target.value)
                       }
-                      className="border-zinc-800 bg-black text-white placeholder:text-zinc-500"
+                      className="border border-neutral-400"
                     />
                   </div>
                   <div className="w-32">
@@ -272,7 +270,7 @@ export default function DatasetCreator() {
                     >
                       <SelectTrigger
                         id={`type-${attr.id}`}
-                        className="border-zinc-800 bg-black text-white w-full"
+                        className="border border-neutral-400 w-full"
                       >
                         <SelectValue />
                       </SelectTrigger>
@@ -289,7 +287,6 @@ export default function DatasetCreator() {
                       variant="outline"
                       size="icon"
                       onClick={() => removeTempAttribute(attr.id)}
-                      className="text-zinc-400 hover:bg-zinc-900 hover:text-white"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -301,7 +298,7 @@ export default function DatasetCreator() {
                 <Button
                   variant="outline"
                   onClick={addTempAttribute}
-                  className="flex-1 border-zinc-800 bg-black text-white hover:bg-zinc-900"
+                  className="flex-1"
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   Add Attribute
@@ -312,15 +309,13 @@ export default function DatasetCreator() {
               </div>
 
               {attributes.length > 0 && (
-                <div className="rounded-lg border border-zinc-800 bg-black p-4">
-                  <h3 className="mb-2 font-semibold text-white">
-                    Current Schema:
-                  </h3>
+                <div className="rounded-lg border p-4">
+                  <h3 className="mb-2 font-semibold">Current Schema:</h3>
                   <ul className="flex gap-4 space-y-1 text-sm">
                     {attributes.map((attr) => (
-                      <li key={attr.id} className="text-zinc-300">
+                      <li key={attr.id}>
                         <span className="font-medium">{attr.name}</span>
-                        <span className="text-zinc-500"> ({attr.type})</span>
+                        <span className="text-neutral-600"> ({attr.type})</span>
                       </li>
                     ))}
                   </ul>
@@ -330,35 +325,33 @@ export default function DatasetCreator() {
           </Card>
 
           {/* Right Side - Dynamic Table Editor */}
-          <Card className="border-zinc-800 bg-zinc-950">
+          <Card>
             <CardHeader>
-              <CardTitle className="text-white">Data Editor</CardTitle>
-              <CardDescription className="text-zinc-400">
+              <CardTitle>Data Editor</CardTitle>
+              <CardDescription>
                 Add and edit rows in your dataset
               </CardDescription>
             </CardHeader>
             <CardContent>
               {attributes.length === 0 ? (
-                <div className="flex h-64 items-center justify-center rounded-lg border-2 border-dashed border-zinc-800">
-                  <p className="text-zinc-500">No dataset schema defined yet</p>
+                <div className="flex h-64 items-center justify-center rounded-lg border border-dashed">
+                  <p>No dataset schema defined yet</p>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="overflow-auto rounded-lg border border-zinc-800">
+                  <div className="overflow-auto rounded-lg border">
                     <Table>
                       <TableHeader>
-                        <TableRow className="border-zinc-800 hover:bg-zinc-900">
+                        <TableRow>
                           {attributes.map((attr) => (
-                            <TableHead key={attr.id} className="text-zinc-400">
-                              {attr.name}
-                            </TableHead>
+                            <TableHead key={attr.id}>{attr.name}</TableHead>
                           ))}
                           <TableHead className="w-16"></TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {data.length === 0 ? (
-                          <TableRow className="border-zinc-800">
+                          <TableRow>
                             <TableCell
                               colSpan={attributes.length + 1}
                               className="text-center text-zinc-500"
@@ -368,15 +361,9 @@ export default function DatasetCreator() {
                           </TableRow>
                         ) : (
                           data.map((row) => (
-                            <TableRow
-                              key={row.id}
-                              className="border-zinc-800 hover:bg-zinc-900"
-                            >
+                            <TableRow key={row.id}>
                               {attributes.map((attr) => (
-                                <TableCell
-                                  key={attr.id}
-                                  className="text-zinc-300"
-                                >
+                                <TableCell key={attr.id}>
                                   {renderEditableCell(row, attr)}
                                 </TableCell>
                               ))}
@@ -385,7 +372,6 @@ export default function DatasetCreator() {
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => deleteRow(row.id)}
-                                  className="text-zinc-400 hover:bg-zinc-800 hover:text-white"
                                 >
                                   <Trash2 className="h-4 w-4" />
                                 </Button>
@@ -396,11 +382,7 @@ export default function DatasetCreator() {
                       </TableBody>
                     </Table>
                   </div>
-                  <Button
-                    onClick={addRow}
-                    variant="outline"
-                    className="w-full border-zinc-800 bg-black text-white hover:bg-zinc-900"
-                  >
+                  <Button onClick={addRow} className="w-full">
                     <Plus className="mr-2 h-4 w-4" />
                     Add Row
                   </Button>
@@ -411,10 +393,10 @@ export default function DatasetCreator() {
         </div>
 
         {/* Footer - Export Options */}
-        <div className="mt-6 flex flex-col gap-4 rounded-lg border border-zinc-800 bg-zinc-950 p-6 sm:flex-row">
+        <div className="mt-6 flex flex-col gap-4 rounded-lg border p-6 sm:flex-row">
           <div className="flex-1">
-            <h3 className="font-semibold text-white">Export Dataset</h3>
-            <p className="text-sm text-zinc-400">
+            <h3 className="font-semibold">Export Dataset</h3>
+            <p className="text-sm">
               Download your dataset in CSV or Excel format
             </p>
           </div>
@@ -423,7 +405,6 @@ export default function DatasetCreator() {
               onClick={exportToCSV}
               disabled={data.length === 0}
               variant="outline"
-              className="border-zinc-800 bg-black text-white hover:bg-zinc-900 disabled:opacity-50"
             >
               <Download className="mr-2 h-4 w-4" />
               Export as CSV
