@@ -155,7 +155,7 @@ export default function DatasetCreator() {
             if (e.key === "Enter") setEditingCell(null);
           }}
           autoFocus
-          className="h-8"
+          className="h-8 w-fit"
         />
       );
     }
