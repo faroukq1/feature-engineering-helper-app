@@ -56,7 +56,6 @@ export function LoginForm({
       );
 
       const data = response.data;
-
       localStorage.setItem(
         "user",
         JSON.stringify({

@@ -33,8 +33,6 @@ def get_db():
     finally:
         db.close()
 
-
-# ===================== USER MANAGEMENT ENDPOINTS =====================
 @app.get("/")
 def read_root():
     """Root endpoint"""
@@ -77,7 +75,7 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Invalid email or password")
     
     return {
-        "message": "Login successful",
+        "user_id": db_user.id,
         "firstname": db_user.firstname,
         "lastname": db_user.lastname,
         "email": db_user.email
@@ -100,49 +98,6 @@ async def jsonify_dataset(file : UploadFile = File(...)):
     return df.to_dict(orient='records')
     
 
-
-
-@app.post("/file-process")
-async def process_file(
-    file: UploadFile = File(...),
-    config: str = Form(...),
-):
-    """
-    Upload CSV/Excel file + JSON config and get them back
-    """
-    try:
-        # Read file
-        content = await file.read()
-        ext = file.filename.split('.')[-1].lower()
-
-        if ext == 'csv':
-            df = pd.read_csv(io.BytesIO(content))
-        elif ext in ['xls', 'xlsx']:
-            df = pd.read_excel(io.BytesIO(content))
-        else:
-            return {"error": "Please upload CSV or Excel file"}
-        
-        # make df readle by fastAPI
-        df = make_dataframe_json_safe(df)
-
-        # Parse config
-        config_data = json.loads(config)
-        parsed_config = DataProcessingConfig(**config_data)
-
-        # operations based on given queries
-        df = preprocess_dataframe(df, parsed_config)
-
-        return {
-            "file": file.filename,
-            "config": parsed_config.model_dump(),
-            "data": df.to_dict(orient="records")
-        }
-    
-    except json.JSONDecodeError:
-        return {"error": "Invalid JSON in config"}
-    except Exception as e:
-        return {"error": str(e)}
-    
 @app.post("/json-process")
 async def process_file(data: List[Dict[str, Any]], config: dict = None):
     try:
@@ -174,3 +129,8 @@ async def process_file(data: List[Dict[str, Any]], config: dict = None):
         raise HTTPException(status_code=400, detail="Invalid JSON in config")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+# @app.post('upload-dataset')
+# async def upload_file(user_id: int)
+#     return
