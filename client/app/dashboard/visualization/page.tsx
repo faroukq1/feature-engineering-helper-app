@@ -566,41 +566,6 @@ export default function VisualizePage() {
             </CardContent>
           </Card>
         )}
-
-        {/* Data Preview */}
-        {dataset.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Data Preview</CardTitle>
-              <CardDescription>First 10 rows of your dataset</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      {columns.map((col) => (
-                        <TableHead key={col}>{col}</TableHead>
-                      ))}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {dataset.slice(0, 10).map((row, idx) => (
-                      <TableRow key={idx}>
-                        {columns.map((col) => (
-                          <TableCell key={col}>
-                            {row[col]?.toString() || "-"}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
         {/* Visualization Section */}
         {dataset.length > 0 && (
           <div ref={chartRef} className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -742,6 +707,39 @@ export default function VisualizePage() {
                   Drop a CSV file above to start exploring your data with
                   interactive charts
                 </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+        {/* Data Preview */}
+        {dataset.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Data Preview</CardTitle>
+              <CardDescription>First 10 rows of your dataset</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      {columns.map((col) => (
+                        <TableHead key={col}>{col}</TableHead>
+                      ))}
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {dataset.slice(0, 10).map((row, idx) => (
+                      <TableRow key={idx}>
+                        {columns.map((col) => (
+                          <TableCell key={col}>
+                            {row[col]?.toString() || "-"}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
             </CardContent>
           </Card>
