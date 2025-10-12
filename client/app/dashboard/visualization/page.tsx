@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -57,6 +57,7 @@ import {
   ComposedChart,
 } from "recharts";
 import * as XLSX from "xlsx";
+import { useDatasetStore } from "@/store/useDatasetStore";
 
 type ChartType =
   | "line"
@@ -79,6 +80,7 @@ const COLORS = [
 ];
 
 export default function VisualizePage() {
+  const { visualizeDataset } = useDatasetStore();
   const [dataset, setDataset] = useState<any[]>([]);
   const [columns, setColumns] = useState<string[]>([]);
   const [fileName, setFileName] = useState<string>("");
@@ -90,6 +92,18 @@ export default function VisualizePage() {
   const [showLabels, setShowLabels] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const chartRef = useRef<HTMLDivElement>(null);
+
+  // Load selected dataset when component mounts
+  useEffect(() => {
+    if (visualizeDataset) {
+      setDataset(visualizeDataset.data);
+      setFileName(visualizeDataset.dataset_name);
+      const cols = Object.keys(visualizeDataset.data[0] || {});
+      setColumns(cols);
+      if (cols.length > 0) setXAxis(cols[0]);
+      if (cols.length > 1) setYAxis(cols[1]);
+    }
+  }, [visualizeDataset]);
 
   const handleFileUpload = (file: File) => {
     setFileName(file.name);
@@ -497,44 +511,61 @@ export default function VisualizePage() {
             <h1 className="text-3xl font-bold text-foreground">
               Dataset Visualization
             </h1>
+            {visualizeDataset ? (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>•</span>
+                <span>Visualizing: {visualizeDataset.dataset_name}</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 text-sm text-amber-600">
+                <span>•</span>
+                <span>
+                  No dataset selected - please select one from the dashboard
+                </span>
+              </div>
+            )}
           </div>
           <p className="text-muted-foreground">
-            Upload and explore your data visually
+            {visualizeDataset
+              ? "Explore your selected dataset visually"
+              : "Upload and explore your data visually"}
           </p>
         </div>
 
-        {/* File Upload Section */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Upload Dataset</CardTitle>
-            <CardDescription>
-              Drag and drop or click to upload a CSV file
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div
-              onDrop={handleDrop}
-              onDragOver={(e) => e.preventDefault()}
-              onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-border rounded-lg p-12 text-center cursor-pointer hover:border-primary transition-colors"
-            >
-              <Upload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground mb-2">
-                {fileName || "Drop your CSV file here or click to browse"}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Supports CSV files only
-              </p>
-              <Input
-                ref={fileInputRef}
-                type="file"
-                accept=".csv"
-                onChange={handleFileSelect}
-                className="hidden"
-              />
-            </div>
-          </CardContent>
-        </Card>
+        {/* File Upload Section - Only show if no dataset is selected */}
+        {!visualizeDataset && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Upload Dataset</CardTitle>
+              <CardDescription>
+                Drag and drop or click to upload a CSV file
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div
+                onDrop={handleDrop}
+                onDragOver={(e) => e.preventDefault()}
+                onClick={() => fileInputRef.current?.click()}
+                className="border-2 border-dashed border-border rounded-lg p-12 text-center cursor-pointer hover:border-primary transition-colors"
+              >
+                <Upload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <p className="text-muted-foreground mb-2">
+                  {fileName || "Drop your CSV file here or click to browse"}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Supports CSV files only
+                </p>
+                <Input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".csv"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Data Preview */}
         {dataset.length > 0 && (

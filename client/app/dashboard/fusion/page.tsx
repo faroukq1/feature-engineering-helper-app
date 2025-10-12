@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -34,104 +36,105 @@ import {
   AlertCircle,
   CheckCircle2,
   Download,
+  Database,
+  Loader2,
+  Save,
 } from "lucide-react";
 import Papa from "papaparse";
 import * as XLSX from "xlsx";
+import axios from "axios";
+import { useDatasetStore } from "@/store/useDatasetStore";
+import { Dataset } from "@/types/DatasetsTypes";
 
-interface ParsedCSV {
-  id: string;
-  name: string;
-  rows: number;
-  columns: string[];
-  data: Record<string, any>[];
-}
-
-export default function page() {
-  const [files, setFiles] = useState<ParsedCSV[]>([]);
-  const [fusedData, setFusedData] = useState<Record<string, any>[] | null>(
-    null
-  );
-  const [previewFile, setPreviewFile] = useState<ParsedCSV | null>(null);
+export default function FusionPage() {
+  const { 
+    datasets, 
+    setDatasets, 
+    selectedDatasets, 
+    setSelectedDatasets,
+    addSelectedDataset,
+    removeSelectedDataset,
+    clearSelectedDatasets
+  } = useDatasetStore();
+  
+  const [fusedData, setFusedData] = useState<Record<string, any>[] | null>(null);
+  const [previewDataset, setPreviewDataset] = useState<Dataset | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleFileUpload = useCallback((uploadedFiles: FileList | null) => {
-    if (!uploadedFiles) return;
-
-    Array.from(uploadedFiles).forEach((file) => {
-      if (file.type !== "text/csv" && !file.name.endsWith(".csv")) {
-        setError("Please upload only CSV files");
-        return;
-      }
-
-      Papa.parse(file, {
-        header: true,
-        skipEmptyLines: true,
-        complete: (results) => {
-          const data = results.data as Record<string, any>[];
-          const columns = results.meta.fields || [];
-
-          const parsedFile: ParsedCSV = {
-            id: Math.random().toString(36).substr(2, 9),
-            name: file.name,
-            rows: data.length,
-            columns,
-            data,
-          };
-
-          setFiles((prev) => [...prev, parsedFile]);
-          setError(null);
-        },
-        error: (error) => {
-          setError(`Error parsing ${file.name}: ${error.message}`);
-        },
-      });
-    });
-  }, []);
-
-  const handleDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      setIsDragging(false);
-      handleFileUpload(e.dataTransfer.files);
-    },
-    [handleFileUpload]
-  );
-
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  }, []);
-
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-  }, []);
-
-  const deleteFile = (id: string) => {
-    setFiles((prev) => prev.filter((f) => f.id !== id));
+  const handleDatasetToggle = (dataset: Dataset) => {
+    if (selectedDatasets.find(d => d.file_id === dataset.file_id)) {
+      removeSelectedDataset(dataset);
+    } else {
+      addSelectedDataset(dataset);
+    }
     setFusedData(null);
     setError(null);
   };
 
-  const canFuse = (): boolean => {
-    if (files.length < 2) return false;
+  const getDatasetColumns = (dataset: Dataset): string[] => {
+    if (dataset.data.length === 0) return [];
+    return Object.keys(dataset.data[0]);
+  };
 
-    const firstColumns = files[0].columns.sort().join(",");
-    return files.every(
-      (file) => file.columns.sort().join(",") === firstColumns
+  const canFuse = (): boolean => {
+    if (selectedDatasets.length < 2) return false;
+
+    const firstColumns = getDatasetColumns(selectedDatasets[0]).sort().join(",");
+    return selectedDatasets.every(
+      (dataset) => getDatasetColumns(dataset).sort().join(",") === firstColumns
     );
   };
 
-  const fuseFiles = () => {
+  const fuseDatasets = () => {
     if (!canFuse()) {
-      setError("All CSVs must have identical columns to be fused");
+      setError("All datasets must have identical columns to be fused");
       return;
     }
 
-    const merged = files.flatMap((file) => file.data);
+    const merged = selectedDatasets.flatMap((dataset) => dataset.data);
     setFusedData(merged);
     setError(null);
+  };
+
+  const saveFusedDataset = async () => {
+    if (!fusedData) return;
+
+    setIsSaving(true);
+    try {
+      const user = JSON.parse(localStorage.getItem("user") as string);
+      if (!user?.id) {
+        alert("Please log in to save datasets");
+        return;
+      }
+
+      const datasetName = `fused-dataset-${new Date().toISOString().split('T')[0]}`;
+      
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/save-json-dataset`, {
+        user_id: user.id,
+        dataset_name: datasetName,
+        data: fusedData,
+      });
+
+      // Refresh the datasets list
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/user-files/${user.id}`
+      );
+      setDatasets(response.data);
+      
+      // Clear selections and fused data
+      clearSelectedDatasets();
+      setFusedData(null);
+      
+      alert("Fused dataset saved successfully!");
+    } catch (error) {
+      console.error("Error saving fused dataset:", error);
+      alert("Error saving fused dataset");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const exportToCSV = () => {
@@ -157,128 +160,142 @@ export default function page() {
   const columnsMatch = canFuse();
 
   return (
-    <div className="w-full text-white p-8">
-      <div className="space-y-8">
-        <div className="text-black dark:text-white">
-          <h1 className="text-3xl font-bold mb-2">Fuse Datasets</h1>
-          <p>Upload multiple CSV files and merge them into one dataset</p>
+    <div className="w-full bg-background p-8">
+      <div className="max-w-7xl mx-auto space-y-8">
+        <div className="space-y-2">
+          <div className="flex items-center gap-3">
+            <Database className="h-8 w-8 text-primary" />
+            <h1 className="text-3xl font-bold">Fuse Datasets</h1>
+          </div>
+          <p className="text-muted-foreground">
+            Select multiple datasets from your collection and merge them into one dataset
+          </p>
         </div>
 
-        {/* Top Section - Upload & File Management */}
+        {/* Dataset Selection */}
         <Card>
           <CardHeader>
-            <CardTitle>Upload CSV Files</CardTitle>
+            <CardTitle>Select Datasets</CardTitle>
             <CardDescription>
-              Drag and drop CSV files or click to select. All files must have
-              identical columns.
+              Choose multiple datasets to fuse. All datasets must have identical columns.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Drag and Drop Area */}
-            <div
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              className={`border-2 border-dashed rounded-lg p-12 text-center transition-colors ${
-                isDragging
-                  ? "border-cyan-500 bg-cyan-500/10"
-                  : "border-zinc-700 hover:border-zinc-600"
-              }`}
-            >
-              <Upload className="w-12 h-12 mx-auto mb-4 text-zinc-400" />
-              <p className="text-lg mb-2">Drag and drop CSV files here</p>
-              <p className="text-sm mb-4">or</p>
-              <label htmlFor="file-upload">
-                <Button variant="outline">Select Files</Button>
-                <Input
-                  id="file-upload"
-                  type="file"
-                  accept=".csv"
-                  multiple
-                  className="hidden"
-                  onChange={(e) => handleFileUpload(e.target.files)}
-                />
-              </label>
-            </div>
-
-            {/* Error/Success Messages */}
-            {error && (
-              <div className="flex items-center gap-2 p-4 bg-red-950/50 border border-red-900 rounded-lg">
-                <AlertCircle className="w-5 h-5 text-red-500" />
-                <p className="text-red-400">{error}</p>
-              </div>
-            )}
-
-            {files.length >= 2 && columnsMatch && (
-              <div className="flex items-center gap-2 p-4 bg-green-950/50 border border-green-900 rounded-lg">
-                <CheckCircle2 className="w-5 h-5 text-green-500" />
-                <p className="text-green-400">
-                  All files have matching columns and can be fused
+            {datasets.length === 0 ? (
+              <div className="text-center py-12">
+                <Database className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-semibold mb-2">No datasets available</h3>
+                <p className="text-muted-foreground">
+                  Upload some datasets first to use the fusion feature
                 </p>
               </div>
-            )}
-
-            {files.length >= 2 && !columnsMatch && (
-              <div className="flex items-center gap-2 p-4 bg-yellow-950/50 border border-yellow-900 rounded-lg">
-                <AlertCircle className="w-5 h-5 text-yellow-500" />
-                <p className="text-yellow-400">
-                  Column mismatch detected. All CSVs must have identical
-                  columns.
-                </p>
-              </div>
-            )}
-
-            {/* File List */}
-            {files.length > 0 && (
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold">
-                  Uploaded Files ({files.length})
-                </h3>
-                <div className="grid grid-cols-3 gap-3">
-                  {files.map((file) => (
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {datasets.map((dataset) => {
+                  const isSelected = selectedDatasets.find(d => d.file_id === dataset.file_id);
+                  const columns = getDatasetColumns(dataset);
+                  
+                  return (
                     <div
-                      key={file.id}
-                      className="flex items-center justify-between p-4 border border-zinc-800 rounded-lg"
+                      key={dataset.file_id}
+                      className={`border rounded-lg p-4 cursor-pointer transition-all ${
+                        isSelected 
+                          ? "border-primary bg-primary/5" 
+                          : "border-border hover:border-primary/50"
+                      }`}
+                      onClick={() => handleDatasetToggle(dataset)}
                     >
-                      <div className="flex-1">
-                        <p className="font-medium">{file.name}</p>
-                        <p className="text-sm">
-                          {file.rows} rows × {file.columns.length} columns
-                        </p>
-                        <p className="text-xs mt-1">
-                          Columns: {file.columns.join(", ")}
-                        </p>
-                      </div>
-                      <div className="flex gap-2">
+                      <div className="flex items-start gap-3">
+                        <Checkbox 
+                          checked={!!isSelected}
+                          onChange={() => handleDatasetToggle(dataset)}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-medium truncate">{dataset.dataset_name}</h3>
+                          <p className="text-sm text-muted-foreground">
+                            {dataset.data.length} rows × {columns.length} columns
+                          </p>
+                          <div className="mt-2">
+                            <Badge variant="outline" className="text-xs">
+                              {columns.length} columns
+                            </Badge>
+                          </div>
+                        </div>
                         <Button
-                          variant="outline"
+                          variant="ghost"
                           size="sm"
-                          onClick={() => setPreviewFile(file)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setPreviewDataset(dataset);
+                          }}
                         >
-                          <Eye className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => deleteFile(file.id)}
-                        >
-                          <Trash2 className="w-4 h-4" />
+                          <Eye className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Error/Success Messages */}
+            {error && (
+              <div className="flex items-center gap-2 p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+                <AlertCircle className="w-5 h-5 text-destructive" />
+                <p className="text-destructive">{error}</p>
+              </div>
+            )}
+
+            {selectedDatasets.length >= 2 && columnsMatch && (
+              <div className="flex items-center gap-2 p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
+                <CheckCircle2 className="w-5 h-5 text-green-600" />
+                <p className="text-green-600">
+                  All selected datasets have matching columns and can be fused
+                </p>
+              </div>
+            )}
+
+            {selectedDatasets.length >= 2 && !columnsMatch && (
+              <div className="flex items-center gap-2 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+                <AlertCircle className="w-5 h-5 text-yellow-600" />
+                <p className="text-yellow-600">
+                  Column mismatch detected. All datasets must have identical columns.
+                </p>
+              </div>
+            )}
+
+            {/* Selected Datasets Summary */}
+            {selectedDatasets.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold">
+                  Selected Datasets ({selectedDatasets.length})
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {selectedDatasets.map((dataset) => (
+                    <Badge key={dataset.file_id} variant="secondary" className="gap-2">
+                      {dataset.dataset_name}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-4 w-4 p-0 hover:bg-destructive hover:text-destructive-foreground"
+                        onClick={() => removeSelectedDataset(dataset)}
+                      >
+                        ×
+                      </Button>
+                    </Badge>
                   ))}
                 </div>
               </div>
             )}
 
             {/* Fuse Button */}
-            {files.length >= 2 && (
+            {selectedDatasets.length >= 2 && (
               <Button
-                onClick={fuseFiles}
+                onClick={fuseDatasets}
                 disabled={!columnsMatch}
-                className="w-full disabled:cursor-not-allowed"
+                className="w-full"
               >
-                Fuse Files
+                Fuse Datasets
               </Button>
             )}
           </CardContent>
@@ -291,35 +308,45 @@ export default function page() {
             <CardDescription>
               {fusedData
                 ? `Preview of merged dataset (${fusedData.length} total rows)`
-                : "Upload CSV files to begin"}
+                : "Select datasets to begin fusion"}
             </CardDescription>
           </CardHeader>
           <CardContent>
             {fusedData ? (
               <div className="space-y-4">
-                {/* Export Buttons */}
+                {/* Action Buttons */}
                 <div className="flex gap-3">
-                  <Button onClick={exportToCSV}>
+                  <Button onClick={saveFusedDataset} disabled={isSaving}>
+                    {isSaving ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="w-4 h-4 mr-2" />
+                        Save to Datasets
+                      </>
+                    )}
+                  </Button>
+                  <Button onClick={exportToCSV} variant="outline">
                     <Download className="w-4 h-4 mr-2" />
                     Export as CSV
                   </Button>
-                  <Button onClick={exportToExcel}>
+                  <Button onClick={exportToExcel} variant="outline">
                     <Download className="w-4 h-4 mr-2" />
                     Export as Excel
                   </Button>
                 </div>
 
                 {/* Data Table */}
-                <div className="border border-zinc-800 rounded-lg overflow-hidden">
+                <div className="border rounded-lg overflow-hidden">
                   <div className="max-h-[500px] overflow-auto">
                     <Table>
-                      <TableHeader className="bg-zinc-900 sticky top-0">
-                        <TableRow className="border-zinc-800 hover:bg-zinc-900">
+                      <TableHeader className="sticky top-0">
+                        <TableRow>
                           {Object.keys(fusedData[0] || {}).map((column) => (
-                            <TableHead
-                              key={column}
-                              className="text-zinc-300 font-semibold"
-                            >
+                            <TableHead key={column}>
                               {column}
                             </TableHead>
                           ))}
@@ -327,15 +354,9 @@ export default function page() {
                       </TableHeader>
                       <TableBody>
                         {fusedData.slice(0, 100).map((row, idx) => (
-                          <TableRow
-                            key={idx}
-                            className="border-zinc-800 hover:bg-zinc-900/50"
-                          >
+                          <TableRow key={idx}>
                             {Object.values(row).map((value, cellIdx) => (
-                              <TableCell
-                                key={cellIdx}
-                                className="text-zinc-300"
-                              >
+                              <TableCell key={cellIdx}>
                                 {String(value)}
                               </TableCell>
                             ))}
@@ -345,7 +366,7 @@ export default function page() {
                     </Table>
                   </div>
                   {fusedData.length > 100 && (
-                    <div className="p-3 bg-zinc-900 border-t border-zinc-800 text-center text-sm text-zinc-400">
+                    <div className="p-3 border-t text-center text-sm text-muted-foreground">
                       Showing first 100 rows of {fusedData.length} total rows
                     </div>
                   )}
@@ -353,10 +374,10 @@ export default function page() {
               </div>
             ) : (
               <div className="text-center py-12">
-                <Upload className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                <Database className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
                 <p className="text-lg">No dataset fused yet</p>
-                <p className="text-sm mt-2">
-                  Upload at least 2 CSV files with matching columns to begin
+                <p className="text-sm mt-2 text-muted-foreground">
+                  Select at least 2 datasets with matching columns to begin
                 </p>
               </div>
             )}
@@ -365,40 +386,34 @@ export default function page() {
       </div>
 
       {/* Preview Modal */}
-      <Dialog open={!!previewFile} onOpenChange={() => setPreviewFile(null)}>
-        <DialogContent className="max-w-4xl bg-zinc-950 border-zinc-800 text-white">
+      <Dialog open={!!previewDataset} onOpenChange={() => setPreviewDataset(null)}>
+        <DialogContent className="max-w-4xl">
           <DialogHeader>
-            <DialogTitle className="text-white">
-              {previewFile?.name}
+            <DialogTitle>
+              {previewDataset?.dataset_name}
             </DialogTitle>
-            <DialogDescription className="text-zinc-400">
+            <DialogDescription>
               Preview of first 10 rows
             </DialogDescription>
           </DialogHeader>
-          {previewFile && (
-            <div className="border border-zinc-800 rounded-lg overflow-hidden">
+          {previewDataset && (
+            <div className="border rounded-lg overflow-hidden">
               <div className="max-h-[400px] overflow-auto">
                 <Table>
-                  <TableHeader className="bg-zinc-900 sticky top-0">
-                    <TableRow className="border-zinc-800 hover:bg-zinc-900">
-                      {previewFile.columns.map((column) => (
-                        <TableHead
-                          key={column}
-                          className="text-zinc-300 font-semibold"
-                        >
+                  <TableHeader className="sticky top-0">
+                    <TableRow>
+                      {getDatasetColumns(previewDataset).map((column) => (
+                        <TableHead key={column}>
                           {column}
                         </TableHead>
                       ))}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {previewFile.data.slice(0, 10).map((row, idx) => (
-                      <TableRow
-                        key={idx}
-                        className="border-zinc-800 hover:bg-zinc-900/50"
-                      >
-                        {previewFile.columns.map((column) => (
-                          <TableCell key={column} className="text-zinc-300">
+                    {previewDataset.data.slice(0, 10).map((row, idx) => (
+                      <TableRow key={idx}>
+                        {getDatasetColumns(previewDataset).map((column) => (
+                          <TableCell key={column}>
                             {String(row[column])}
                           </TableCell>
                         ))}

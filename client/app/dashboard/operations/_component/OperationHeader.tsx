@@ -1,12 +1,30 @@
 import { Button } from "@/components/ui/button";
-import { Upload } from "lucide-react";
+import { Upload, Database } from "lucide-react";
 import axios from "axios";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDatasetStore } from "@/store/useDatasetStore";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const OperationHeader = () => {
-  const { setData, setFileName, setLoading } = useDatasetStore();
+  const { setData, setFileName, setLoading, selectedDataset } =
+    useDatasetStore();
+
+  // Load selected dataset when component mounts
+  useEffect(() => {
+    if (selectedDataset) {
+      setData(selectedDataset.data);
+      setFileName(selectedDataset.dataset_name);
+    } else {
+      // If no selected dataset, try to load from localStorage as fallback
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      if (user?.id) {
+        // You could add a function to fetch the most recent dataset here
+        console.log(
+          "No selected dataset found, please select one from the dashboard"
+        );
+      }
+    }
+  }, [selectedDataset, setData, setFileName]);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -39,7 +57,22 @@ const OperationHeader = () => {
   return (
     <div className="border-b px-6 py-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Operations</h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl font-bold">Operations</h1>
+          {selectedDataset ? (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Database className="h-4 w-4" />
+              <span>Working with: {selectedDataset.dataset_name}</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 text-sm text-amber-600">
+              <Database className="h-4 w-4" />
+              <span>
+                No dataset selected - please select one from the dashboard
+              </span>
+            </div>
+          )}
+        </div>
         <div className="flex items-center gap-2">
           <div className="relative">
             <input

@@ -29,28 +29,15 @@ import {
   Eye,
   Loader2,
   Table,
+  Settings,
+  BarChart3,
+  GitMerge,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { cn } from "@/lib/utils";
-
-interface Dataset {
-  file_id: string;
-  dataset_name: string;
-  file_path: string;
-  file_size: number;
-  upload_date: string;
-  download_url: string;
-  data: Record<string, any>[];
-}
-
-interface DatasetMetadata {
-  rows: number;
-  columns: number;
-  columnNames: string[];
-  columnTypes: Record<string, string>;
-  summary: string;
-}
+import { Dataset, DatasetMetadata } from "@/types/DatasetsTypes";
+import { useDatasetStore } from "@/store/useDatasetStore";
 
 const typeColors = {
   CSV: "bg-blue-500/10 text-blue-500 border-blue-500/20",
@@ -101,8 +88,15 @@ const extractMetadata = (dataset: Dataset): DatasetMetadata => {
 };
 
 export default function DashboardPage() {
-  const [datasets, setDatasets] = useState<Dataset[]>([]);
-  const [selectedDataset, setSelectedDataset] = useState<Dataset | null>(null);
+  const { 
+    datasets, 
+    setDatasets, 
+    visualizeDataset, 
+    setVisualizeDataset,
+    selectedDataset: globalSelectedDataset,
+    setSelectedDataset: setGlobalSelectedDataset
+  } = useDatasetStore();
+  const [localSelectedDataset, setLocalSelectedDataset] = useState<Dataset | null>(null);
   const [selectedMetadata, setSelectedMetadata] =
     useState<DatasetMetadata | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -135,14 +129,23 @@ export default function DashboardPage() {
   }, []);
 
   const handleCardClick = (dataset: Dataset) => {
-    setSelectedDataset(dataset);
+    setLocalSelectedDataset(dataset);
+    setGlobalSelectedDataset(dataset);
     setSelectedMetadata(extractMetadata(dataset));
     setIsDrawerOpen(true);
   };
 
   const handleVisualize = () => {
-    if (selectedDataset) {
-      router.push(`/visualize?dataset=${selectedDataset.file_id}`);
+    if (localSelectedDataset) {
+      router.push("/dashboard/visualization");
+      setVisualizeDataset(localSelectedDataset);
+      setIsDrawerOpen(false);
+    }
+  };
+
+  const handlePreprocess = () => {
+    if (localSelectedDataset) {
+      router.push("/dashboard/operations");
       setIsDrawerOpen(false);
     }
   };
@@ -198,11 +201,11 @@ export default function DashboardPage() {
   };
 
   const handleDownload = async () => {
-    if (!selectedDataset) return;
+    if (!localSelectedDataset) return;
 
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/${selectedDataset.download_url}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/${localSelectedDataset.download_url}`,
         {
           responseType: "blob",
         }
@@ -211,7 +214,7 @@ export default function DashboardPage() {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", selectedDataset.dataset_name);
+      link.setAttribute("download", localSelectedDataset.dataset_name);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -258,11 +261,19 @@ export default function DashboardPage() {
 
       {/* Main Content */}
       <main className="px-4 py-8 md:px-6">
-        <div className="mb-6">
+        <div className="mb-6 flex items-center justify-between">
           <p className="text-muted-foreground">
             Manage and visualize your datasets. Click on any card to view
             details.
           </p>
+          <Button
+            onClick={() => router.push("/dashboard/fusion")}
+            variant="outline"
+            className="gap-2"
+          >
+            <GitMerge className="h-4 w-4" />
+            Fuse Datasets
+          </Button>
         </div>
 
         {isLoading ? (
@@ -353,7 +364,7 @@ export default function DashboardPage() {
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
                   <DrawerTitle className="text-2xl">
-                    {selectedDataset?.dataset_name}
+                    {localSelectedDataset?.dataset_name}
                   </DrawerTitle>
                   <DrawerDescription className="mt-2">
                     {selectedMetadata?.summary}
@@ -361,11 +372,11 @@ export default function DashboardPage() {
                 </div>
                 <Badge
                   className={
-                    typeColors[getFileType(selectedDataset?.dataset_name || "")]
+                    typeColors[getFileType(localSelectedDataset?.dataset_name || "")]
                   }
                   variant="outline"
                 >
-                  {getFileType(selectedDataset?.dataset_name || "")}
+                  {getFileType(localSelectedDataset?.dataset_name || "")}
                 </Badge>
               </div>
             </DrawerHeader>
@@ -393,8 +404,8 @@ export default function DashboardPage() {
                     <CardHeader className="pb-3">
                       <CardDescription>File Size</CardDescription>
                       <CardTitle className="text-lg">
-                        {selectedDataset &&
-                          formatFileSize(selectedDataset.file_size)}
+                        {localSelectedDataset &&
+                          formatFileSize(localSelectedDataset.file_size)}
                       </CardTitle>
                     </CardHeader>
                   </Card>
@@ -432,7 +443,7 @@ export default function DashboardPage() {
                     </Card>
                   )}
 
-                {selectedDataset && selectedDataset.data.length > 0 && (
+                {localSelectedDataset && localSelectedDataset.data.length > 0 && (
                   <Card>
                     <CardHeader>
                       <CardTitle className="text-lg">Data Preview</CardTitle>
@@ -454,7 +465,7 @@ export default function DashboardPage() {
                             </tr>
                           </thead>
                           <tbody>
-                            {selectedDataset.data
+                            {localSelectedDataset.data
                               .slice(0, 5)
                               .map((row, idx) => (
                                 <tr
@@ -484,21 +495,31 @@ export default function DashboardPage() {
 
                 <div className="flex gap-3">
                   <Button
-                    onClick={handleVisualize}
+                    onClick={handlePreprocess}
                     className="flex-1 gap-2"
                     size="lg"
                   >
-                    <Eye className="h-4 w-4" />
-                    Visualize Dataset
+                    <Settings className="h-4 w-4" />
+                    Preprocess
+                  </Button>
+                  <Button
+                    onClick={handleVisualize}
+                    className="flex-1 gap-2"
+                    size="lg"
+                    variant="outline"
+                  >
+                    <BarChart3 className="h-4 w-4" />
+                    Visualize
                   </Button>
                   <a
                     className={cn(
                       buttonVariants({ variant: "outline", size: "lg" }),
                       "flex-1 bg-transparent"
                     )}
-                    href={`${process.env.NEXT_PUBLIC_API_URL}/downloads/${selectedDataset?.file_path}`}
+                    href={`${process.env.NEXT_PUBLIC_API_URL}/downloads/${localSelectedDataset?.file_path}`}
                     download
                   >
+                    <Download className="h-4 w-4 mr-2" />
                     Download
                   </a>
                 </div>
