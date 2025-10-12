@@ -1,5 +1,6 @@
-from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, Form, Body
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, Path
+from fastapi.responses import FileResponse
+import urllib.parse
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from app.schemas import UserCreate, UserLogin, DataProcessingConfig, SaveDatasetRequest
@@ -157,7 +158,7 @@ async def save_json_dataset(
     unique_id = str(uuid.uuid4())
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     safe_name = dataset_name.replace(" ", "_")
-    filename = f"{unique_id}@{timestamp}@{safe_name}.json"
+    filename = f"{unique_id}_{timestamp}_{safe_name}.json"  # real file name
     file_path = os.path.join("downloads", filename)
 
     # Save JSON file
@@ -172,7 +173,7 @@ async def save_json_dataset(
         file_id=unique_id,
         file_data=data,
         original_filename=dataset_name,
-        file_path=file_path,
+        file_path=filename,  # store **actual filename** here
         file_size=file_size,
     )
     db.add(db_file)
@@ -183,10 +184,11 @@ async def save_json_dataset(
         "message": "JSON dataset stored successfully",
         "file_id": db_file.file_id,
         "dataset_name": db_file.original_filename,
-        "file_path": db_file.file_path,
+        "file_path": db_file.file_path,  # will now reflect the real file name
         "row_count": len(data),
-        "download_url": f"download/{db_file.file_id}",
+        "download_url": f"download/{db_file.file_path}",  # use real filename
     }
+
 
 
 @app.get("/user-files/{user_id}")
@@ -213,3 +215,16 @@ def get_user_files(user_id: int, db: Session = Depends(get_db)):
         })
     
     return result
+
+
+@app.get("/downloads/{filename:path}")
+def download_file(filename: str = Path(...)):
+    DOWNLOADS_DIR = "downloads"
+    # Decode URL-encoded characters
+    filename = urllib.parse.unquote(filename)
+    file_path = os.path.join(DOWNLOADS_DIR, filename)
+
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="File not found")
+
+    return FileResponse(path=file_path, filename=filename, media_type="application/json")

@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-
+import { shell } from "electron";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Drawer,
@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { cn } from "@/lib/utils";
 
 interface Dataset {
   file_id: string;
@@ -490,15 +491,16 @@ export default function DashboardPage() {
                     <Eye className="h-4 w-4" />
                     Visualize Dataset
                   </Button>
-                  <Button
-                    onClick={handleDownload}
-                    variant="outline"
-                    className="flex-1 bg-transparent"
-                    size="lg"
+                  <a
+                    className={cn(
+                      buttonVariants({ variant: "outline", size: "lg" }),
+                      "flex-1 bg-transparent"
+                    )}
+                    href={`${process.env.NEXT_PUBLIC_API_URL}/downloads/${selectedDataset?.file_path}`}
+                    download
                   >
-                    <Download className="h-4 w-4 mr-2" />
                     Download
-                  </Button>
+                  </a>
                 </div>
               </div>
             </div>
