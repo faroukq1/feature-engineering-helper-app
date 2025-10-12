@@ -28,7 +28,6 @@ const OperationHeader = () => {
       );
 
       setData(response.data);
-      console.log(JSON.stringify(response.data, null, 2));
     } catch (error) {
       console.error("Error uploading file:", error);
       alert("Error uploading or processing file");

@@ -59,7 +59,7 @@ export function LoginForm({
       localStorage.setItem(
         "user",
         JSON.stringify({
-          email: values.email,
+          id: data.id,
           firstname: data.firstname,
           lastname: data.lastname,
         })

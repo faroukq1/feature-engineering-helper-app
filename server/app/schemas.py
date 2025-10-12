@@ -1,7 +1,8 @@
 from pydantic import BaseModel
-from fastapi import UploadFile, Form
+from fastapi import UploadFile
 from typing import Optional
 from enum import Enum
+from typing import List, Dict, Any
 
 class UserCreate(BaseModel):
     firstname: str
@@ -29,6 +30,11 @@ class DatasetOperations(BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
+
+class SaveDatasetRequest(BaseModel):
+    user_id: int
+    dataset_name: str
+    data: List[Dict[str, Any]]
 
 class FillValues(BaseModel):
     mean: Optional[bool] = None

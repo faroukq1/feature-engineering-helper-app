@@ -2,15 +2,19 @@ from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, Form, Bod
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from app.schemas import UserCreate, UserLogin, DataProcessingConfig
-from app.utils import hash_password, verify_password,  make_dataframe_json_safe, preprocess_dataframe, handle_missing_data
+from app.schemas import UserCreate, UserLogin, DataProcessingConfig, SaveDatasetRequest
+from app.utils import hash_password, verify_password,  make_dataframe_json_safe, preprocess_dataframe
 from app import models
 from app.database import engine, SessionLocal
 import pandas as pd
 import io, json
 import numpy as np
 from typing import List, Dict, Any
-
+import os
+import uuid
+import json
+from datetime import datetime, timezone
+from app.models import UserFile
 
 app = FastAPI(title="Data Processing API")
 
@@ -75,7 +79,7 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Invalid email or password")
     
     return {
-        "user_id": db_user.id,
+        "id": db_user.id,
         "firstname": db_user.firstname,
         "lastname": db_user.lastname,
         "email": db_user.email
@@ -131,6 +135,81 @@ async def process_file(data: List[Dict[str, Any]], config: dict = None):
         raise HTTPException(status_code=500, detail=str(e))
     
 
-# @app.post('upload-dataset')
-# async def upload_file(user_id: int)
-#     return
+
+
+@app.post("/save-json-dataset")
+async def save_json_dataset(
+    req: SaveDatasetRequest,
+    db: Session = Depends(get_db),
+):
+    """Store a JSON dataset (list of objects) on disk + in DB."""
+
+    user_id = req.user_id
+    dataset_name = req.dataset_name
+    data = req.data
+
+    if not data:
+        raise HTTPException(status_code=400, detail="Dataset is empty")
+
+    os.makedirs("downloads", exist_ok=True)
+
+    # Create unique file name
+    unique_id = str(uuid.uuid4())
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    safe_name = dataset_name.replace(" ", "_")
+    filename = f"{unique_id}@{timestamp}@{safe_name}.json"
+    file_path = os.path.join("downloads", filename)
+
+    # Save JSON file
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4, ensure_ascii=False)
+
+    file_size = os.path.getsize(file_path)
+
+    # Store metadata in DB
+    db_file = UserFile(
+        user_id=user_id,
+        file_id=unique_id,
+        file_data=data,
+        original_filename=dataset_name,
+        file_path=file_path,
+        file_size=file_size,
+    )
+    db.add(db_file)
+    db.commit()
+    db.refresh(db_file)
+
+    return {
+        "message": "JSON dataset stored successfully",
+        "file_id": db_file.file_id,
+        "dataset_name": db_file.original_filename,
+        "file_path": db_file.file_path,
+        "row_count": len(data),
+        "download_url": f"download/{db_file.file_id}",
+    }
+
+
+@app.get("/user-files/{user_id}")
+def get_user_files(user_id: int, db: Session = Depends(get_db)):
+    """
+    Fetch all files uploaded by a specific user.
+    """
+    files = db.query(UserFile).filter(UserFile.user_id == user_id).all()
+    
+    if not files:
+        raise HTTPException(status_code=404, detail="No files found for this user")
+    
+    # Convert ORM objects to dicts
+    result = []
+    for f in files:
+        result.append({
+            "file_id": f.file_id,
+            "dataset_name": f.original_filename,
+            "file_path": f.file_path,
+            "file_size": f.file_size,
+            "upload_date": f.upload_date,
+            "data" : f.file_data,
+            "download_url": f"download/{f.file_id}"
+        })
+    
+    return result
