@@ -228,3 +228,61 @@ def download_file(filename: str = Path(...)):
         raise HTTPException(status_code=404, detail="File not found")
 
     return FileResponse(path=file_path, filename=filename, media_type="application/json")
+
+
+@app.put("/update-dataset/{file_id}")
+async def update_dataset(
+    file_id: str,
+    req: SaveDatasetRequest,
+    db: Session = Depends(get_db),
+):
+    """Update an existing dataset with new data, replacing the old file."""
+    
+    # Find the existing dataset
+    existing_file = db.query(UserFile).filter(UserFile.file_id == file_id).first()
+    if not existing_file:
+        raise HTTPException(status_code=404, detail="Dataset not found")
+    
+    # Check if user owns this dataset
+    if existing_file.user_id != req.user_id:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    # Delete the old file
+    old_file_path = os.path.join("downloads", existing_file.file_path)
+    if os.path.exists(old_file_path):
+        os.remove(old_file_path)
+        print(f"🗑️ Deleted old file: {old_file_path}")
+    
+    # Create new file with updated data
+    os.makedirs("downloads", exist_ok=True)
+    
+    # Create unique file name for the updated dataset
+    unique_id = str(uuid.uuid4())
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    safe_name = req.dataset_name.replace(" ", "_")
+    filename = f"{unique_id}_{timestamp}_{safe_name}.json"
+    file_path = os.path.join("downloads", filename)
+    
+    # Save new JSON file
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump(req.data, f, indent=4, ensure_ascii=False)
+    
+    file_size = os.path.getsize(file_path)
+    
+    # Update the database record
+    existing_file.file_data = req.data
+    existing_file.file_path = filename
+    existing_file.file_size = file_size
+    existing_file.upload_date = datetime.now(timezone.utc)
+    
+    db.commit()
+    db.refresh(existing_file)
+    
+    return {
+        "message": "Dataset updated successfully",
+        "file_id": existing_file.file_id,
+        "dataset_name": existing_file.original_filename,
+        "file_path": existing_file.file_path,
+        "row_count": len(req.data),
+        "download_url": f"download/{existing_file.file_path}",
+    }

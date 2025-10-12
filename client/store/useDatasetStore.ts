@@ -23,6 +23,7 @@ type DatasetStore = {
   addSelectedDataset: (dataset: Dataset) => void;
   removeSelectedDataset: (dataset: Dataset) => void;
   clearSelectedDatasets: () => void;
+  updateSelectedDataset: (updatedDataset: Dataset) => void;
   setFileName: (fileName: string) => void;
   setLoading: (loading: boolean) => void;
   clearDataset: () => void;
@@ -57,6 +58,16 @@ export const useDatasetStore = create<DatasetStore>()(
           ),
         })),
       clearSelectedDatasets: () => set({ selectedDatasets: [] }),
+      updateSelectedDataset: (updatedDataset) =>
+        set((state) => ({
+          selectedDataset:
+            state.selectedDataset?.file_id === updatedDataset.file_id
+              ? updatedDataset
+              : state.selectedDataset,
+          datasets: state.datasets.map((d) =>
+            d.file_id === updatedDataset.file_id ? updatedDataset : d
+          ),
+        })),
       setFileName: (fileName) => set({ fileName }),
       setLoading: (loading) => set({ loading }),
       clearDataset: () => set({ data: [], fileName: "" }),

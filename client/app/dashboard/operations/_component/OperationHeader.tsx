@@ -59,19 +59,6 @@ const OperationHeader = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-bold">Operations</h1>
-          {selectedDataset ? (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Database className="h-4 w-4" />
-              <span>Working with: {selectedDataset.dataset_name}</span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2 text-sm text-amber-600">
-              <Database className="h-4 w-4" />
-              <span>
-                No dataset selected - please select one from the dashboard
-              </span>
-            </div>
-          )}
         </div>
         <div className="flex items-center gap-2">
           <div className="relative">

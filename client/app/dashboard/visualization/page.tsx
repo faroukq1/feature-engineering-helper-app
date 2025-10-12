@@ -80,7 +80,7 @@ const COLORS = [
 ];
 
 export default function VisualizePage() {
-  const { visualizeDataset } = useDatasetStore();
+  const { visualizeDataset, selectedDataset, datasets } = useDatasetStore();
   const [dataset, setDataset] = useState<any[]>([]);
   const [columns, setColumns] = useState<string[]>([]);
   const [fileName, setFileName] = useState<string>("");
@@ -93,17 +93,22 @@ export default function VisualizePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const chartRef = useRef<HTMLDivElement>(null);
 
-  // Load selected dataset when component mounts
+  // Load dataset from store: visualizeDataset -> selectedDataset -> first of datasets
   useEffect(() => {
-    if (visualizeDataset) {
-      setDataset(visualizeDataset.data);
-      setFileName(visualizeDataset.dataset_name);
-      const cols = Object.keys(visualizeDataset.data[0] || {});
+    const source =
+      visualizeDataset ??
+      selectedDataset ??
+      (datasets && datasets.length > 0 ? datasets[0] : null);
+
+    if (source && source.data && source.data.length > 0) {
+      setDataset(source.data);
+      setFileName(source.dataset_name);
+      const cols = Object.keys(source.data[0] || {});
       setColumns(cols);
       if (cols.length > 0) setXAxis(cols[0]);
       if (cols.length > 1) setYAxis(cols[1]);
     }
-  }, [visualizeDataset]);
+  }, [visualizeDataset, selectedDataset, datasets]);
 
   const handleFileUpload = (file: File) => {
     setFileName(file.name);

@@ -45,27 +45,53 @@ import * as XLSX from "xlsx";
 import axios from "axios";
 import { useDatasetStore } from "@/store/useDatasetStore";
 import { Dataset } from "@/types/DatasetsTypes";
+import { useToast } from "@/hooks/use-toast";
 
 export default function FusionPage() {
-  const { 
-    datasets, 
-    setDatasets, 
-    selectedDatasets, 
+  const {
+    datasets,
+    setDatasets,
+    selectedDatasets,
     setSelectedDatasets,
     addSelectedDataset,
     removeSelectedDataset,
-    clearSelectedDatasets
+    clearSelectedDatasets,
   } = useDatasetStore();
-  
-  const [fusedData, setFusedData] = useState<Record<string, any>[] | null>(null);
+
+  const [fusedData, setFusedData] = useState<Record<string, any>[] | null>(
+    null
+  );
   const [previewDataset, setPreviewDataset] = useState<Dataset | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const { toast } = useToast();
+
+  // Load user datasets when component mounts
+  useEffect(() => {
+    const fetchUserFiles = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user") as string);
+        if (!user?.id) {
+          console.error("No user found in localStorage");
+          return;
+        }
+
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/user-files/${user.id}`
+        );
+        setDatasets(response.data);
+      } catch (error) {
+        console.error("Error fetching datasets:", error);
+      }
+    };
+
+    fetchUserFiles();
+  }, [setDatasets]);
 
   const handleDatasetToggle = (dataset: Dataset) => {
-    if (selectedDatasets.find(d => d.file_id === dataset.file_id)) {
+    if (selectedDatasets.find((d) => d.file_id === dataset.file_id)) {
       removeSelectedDataset(dataset);
     } else {
       addSelectedDataset(dataset);
@@ -82,7 +108,9 @@ export default function FusionPage() {
   const canFuse = (): boolean => {
     if (selectedDatasets.length < 2) return false;
 
-    const firstColumns = getDatasetColumns(selectedDatasets[0]).sort().join(",");
+    const firstColumns = getDatasetColumns(selectedDatasets[0])
+      .sort()
+      .join(",");
     return selectedDatasets.every(
       (dataset) => getDatasetColumns(dataset).sort().join(",") === firstColumns
     );
@@ -106,12 +134,18 @@ export default function FusionPage() {
     try {
       const user = JSON.parse(localStorage.getItem("user") as string);
       if (!user?.id) {
-        alert("Please log in to save datasets");
+        toast({
+          variant: "destructive",
+          title: "Authentication Required",
+          description: "Please log in to save datasets.",
+        });
         return;
       }
 
-      const datasetName = `fused-dataset-${new Date().toISOString().split('T')[0]}`;
-      
+      const datasetName = `fused-dataset-${
+        new Date().toISOString().split("T")[0]
+      }`;
+
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/save-json-dataset`, {
         user_id: user.id,
         dataset_name: datasetName,
@@ -123,15 +157,23 @@ export default function FusionPage() {
         `${process.env.NEXT_PUBLIC_API_URL}/user-files/${user.id}`
       );
       setDatasets(response.data);
-      
+
       // Clear selections and fused data
       clearSelectedDatasets();
       setFusedData(null);
-      
-      alert("Fused dataset saved successfully!");
+
+      toast({
+        variant: "success",
+        title: "Fused Dataset Saved Successfully",
+        description: "Your fused dataset has been saved to your collection.",
+      });
     } catch (error) {
       console.error("Error saving fused dataset:", error);
-      alert("Error saving fused dataset");
+      toast({
+        variant: "destructive",
+        title: "Error Saving Fused Dataset",
+        description: "Please try again.",
+      });
     } finally {
       setIsSaving(false);
     }
@@ -168,7 +210,8 @@ export default function FusionPage() {
             <h1 className="text-3xl font-bold">Fuse Datasets</h1>
           </div>
           <p className="text-muted-foreground">
-            Select multiple datasets from your collection and merge them into one dataset
+            Select multiple datasets from your collection and merge them into
+            one dataset
           </p>
         </div>
 
@@ -177,14 +220,17 @@ export default function FusionPage() {
           <CardHeader>
             <CardTitle>Select Datasets</CardTitle>
             <CardDescription>
-              Choose multiple datasets to fuse. All datasets must have identical columns.
+              Choose multiple datasets to fuse. All datasets must have identical
+              columns.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {datasets.length === 0 ? (
               <div className="text-center py-12">
                 <Database className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No datasets available</h3>
+                <h3 className="text-lg font-semibold mb-2">
+                  No datasets available
+                </h3>
                 <p className="text-muted-foreground">
                   Upload some datasets first to use the fusion feature
                 </p>
@@ -192,28 +238,33 @@ export default function FusionPage() {
             ) : (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {datasets.map((dataset) => {
-                  const isSelected = selectedDatasets.find(d => d.file_id === dataset.file_id);
+                  const isSelected = selectedDatasets.find(
+                    (d) => d.file_id === dataset.file_id
+                  );
                   const columns = getDatasetColumns(dataset);
-                  
+
                   return (
                     <div
                       key={dataset.file_id}
                       className={`border rounded-lg p-4 cursor-pointer transition-all ${
-                        isSelected 
-                          ? "border-primary bg-primary/5" 
+                        isSelected
+                          ? "border-primary bg-primary/5"
                           : "border-border hover:border-primary/50"
                       }`}
                       onClick={() => handleDatasetToggle(dataset)}
                     >
                       <div className="flex items-start gap-3">
-                        <Checkbox 
+                        <Checkbox
                           checked={!!isSelected}
                           onChange={() => handleDatasetToggle(dataset)}
                         />
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-medium truncate">{dataset.dataset_name}</h3>
+                          <h3 className="font-medium truncate">
+                            {dataset.dataset_name}
+                          </h3>
                           <p className="text-sm text-muted-foreground">
-                            {dataset.data.length} rows × {columns.length} columns
+                            {dataset.data.length} rows × {columns.length}{" "}
+                            columns
                           </p>
                           <div className="mt-2">
                             <Badge variant="outline" className="text-xs">
@@ -259,7 +310,8 @@ export default function FusionPage() {
               <div className="flex items-center gap-2 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
                 <AlertCircle className="w-5 h-5 text-yellow-600" />
                 <p className="text-yellow-600">
-                  Column mismatch detected. All datasets must have identical columns.
+                  Column mismatch detected. All datasets must have identical
+                  columns.
                 </p>
               </div>
             )}
@@ -272,7 +324,11 @@ export default function FusionPage() {
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {selectedDatasets.map((dataset) => (
-                    <Badge key={dataset.file_id} variant="secondary" className="gap-2">
+                    <Badge
+                      key={dataset.file_id}
+                      variant="secondary"
+                      className="gap-2"
+                    >
                       {dataset.dataset_name}
                       <Button
                         variant="ghost"
@@ -346,9 +402,7 @@ export default function FusionPage() {
                       <TableHeader className="sticky top-0">
                         <TableRow>
                           {Object.keys(fusedData[0] || {}).map((column) => (
-                            <TableHead key={column}>
-                              {column}
-                            </TableHead>
+                            <TableHead key={column}>{column}</TableHead>
                           ))}
                         </TableRow>
                       </TableHeader>
@@ -386,15 +440,14 @@ export default function FusionPage() {
       </div>
 
       {/* Preview Modal */}
-      <Dialog open={!!previewDataset} onOpenChange={() => setPreviewDataset(null)}>
+      <Dialog
+        open={!!previewDataset}
+        onOpenChange={() => setPreviewDataset(null)}
+      >
         <DialogContent className="max-w-4xl">
           <DialogHeader>
-            <DialogTitle>
-              {previewDataset?.dataset_name}
-            </DialogTitle>
-            <DialogDescription>
-              Preview of first 10 rows
-            </DialogDescription>
+            <DialogTitle>{previewDataset?.dataset_name}</DialogTitle>
+            <DialogDescription>Preview of first 10 rows</DialogDescription>
           </DialogHeader>
           {previewDataset && (
             <div className="border rounded-lg overflow-hidden">
@@ -403,9 +456,7 @@ export default function FusionPage() {
                   <TableHeader className="sticky top-0">
                     <TableRow>
                       {getDatasetColumns(previewDataset).map((column) => (
-                        <TableHead key={column}>
-                          {column}
-                        </TableHead>
+                        <TableHead key={column}>{column}</TableHead>
                       ))}
                     </TableRow>
                   </TableHeader>
