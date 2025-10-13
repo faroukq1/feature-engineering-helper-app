@@ -73,8 +73,19 @@ def preprocess_dataframe(df: pd.DataFrame, config) -> pd.DataFrame:
     id_columns = get_id_columns(df)
     print(f"🔍 Identified ID columns to skip: {id_columns}", flush=True)
 
+    # Resolve target columns (attributes) to operate on
+    target_columns = getattr(config, "target_columns", None)
+    if target_columns:
+        # Keep only columns that exist in df and are not ID columns for numeric ops later
+        target_columns = [c for c in target_columns if c in df.columns]
+        print(f"🎯 Target columns specified: {target_columns}", flush=True)
+
     # --- Remove duplicates ---
-    if getattr(config, "remove_deblicate", False):
+    # Accept both new and legacy flag names for backward compatibility
+    _rm_dup_flag = getattr(config, "remove_deplicate", None)
+    if _rm_dup_flag is None:
+        _rm_dup_flag = getattr(config, "remove_deblicate", False)
+    if bool(_rm_dup_flag):
         before = len(df)
         df = df.drop_duplicates()
         print(f"✅ Duplicates removed. {before - len(df)} rows dropped.", flush=True)
@@ -84,6 +95,8 @@ def preprocess_dataframe(df: pd.DataFrame, config) -> pd.DataFrame:
         numeric_cols = df.select_dtypes(include=['number']).columns
         # Exclude ID columns from normalization
         numeric_cols = [col for col in numeric_cols if col not in id_columns]
+        if target_columns:
+            numeric_cols = [col for col in numeric_cols if col in target_columns]
         if len(numeric_cols) > 0:
             scaler = MinMaxScaler()
             df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
@@ -96,6 +109,8 @@ def preprocess_dataframe(df: pd.DataFrame, config) -> pd.DataFrame:
         numeric_cols = df.select_dtypes(include=['number']).columns
         # Exclude ID columns from standardization
         numeric_cols = [col for col in numeric_cols if col not in id_columns]
+        if target_columns:
+            numeric_cols = [col for col in numeric_cols if col in target_columns]
         if len(numeric_cols) > 0:
             scaler = StandardScaler()
             df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
@@ -107,7 +122,7 @@ def preprocess_dataframe(df: pd.DataFrame, config) -> pd.DataFrame:
     if getattr(config, "missing_data", None):
         try:
             print("🔧 Processing missing data...", flush=True)
-            df = handle_missing_data(df, config.missing_data.dict())
+            df = handle_missing_data(df, config.missing_data.dict(), target_columns=target_columns, id_columns=id_columns)
             print("✅ Missing data handled successfully.", flush=True)
         except Exception as e:
             print(f"❌ Error handling missing data: {e}", flush=True)
@@ -115,7 +130,7 @@ def preprocess_dataframe(df: pd.DataFrame, config) -> pd.DataFrame:
     return df
 
 
-def apply_fill_values(df: pd.DataFrame, fill_values_config: dict) -> pd.DataFrame:
+def apply_fill_values(df: pd.DataFrame, fill_values_config: dict, *, target_columns: list | None = None, id_columns: list | None = None) -> pd.DataFrame:
     """
     Fill missing values based on user-selected strategies.
     Handles numeric and categorical columns safely.
@@ -127,7 +142,7 @@ def apply_fill_values(df: pd.DataFrame, fill_values_config: dict) -> pd.DataFram
         return df
 
     # Identify ID columns to skip
-    id_columns = get_id_columns(df)
+    id_columns = id_columns or get_id_columns(df)
 
     # Ensure numeric columns are properly detected
     df = df.apply(lambda col: pd.to_numeric(col, errors='ignore'))
@@ -135,6 +150,9 @@ def apply_fill_values(df: pd.DataFrame, fill_values_config: dict) -> pd.DataFram
     # Exclude ID columns from numeric operations
     numeric_cols = [col for col in numeric_cols if col not in id_columns]
     all_cols = [col for col in df.columns if col not in id_columns]
+    if target_columns:
+        numeric_cols = [c for c in numeric_cols if c in target_columns]
+        all_cols = [c for c in all_cols if c in target_columns]
 
     # Mean
     if fill_values_config.get("mean", False):
@@ -165,7 +183,7 @@ def apply_fill_values(df: pd.DataFrame, fill_values_config: dict) -> pd.DataFram
     return df
 
 
-def handle_missing_data(df: pd.DataFrame, missing_data_config: dict) -> pd.DataFrame:
+def handle_missing_data(df: pd.DataFrame, missing_data_config: dict, *, target_columns: list | None = None, id_columns: list | None = None) -> pd.DataFrame:
     """
     Handle missing data using remove_rows, interpolation, or fill_values.
     Works safely for any type of dataset.
@@ -179,7 +197,10 @@ def handle_missing_data(df: pd.DataFrame, missing_data_config: dict) -> pd.DataF
     # --- Remove Rows ---
     if missing_data_config.get("remove_rows", False):
         before = len(df)
-        df = df.dropna()
+        subset = None
+        if target_columns:
+            subset = [c for c in target_columns if c in df.columns]
+        df = df.dropna(subset=subset)
         print(f"✅ Removed rows with missing values: {before - len(df)} rows removed.", flush=True)
 
     # --- Interpolate (numeric only, excluding ID columns) ---
@@ -189,8 +210,10 @@ def handle_missing_data(df: pd.DataFrame, missing_data_config: dict) -> pd.DataF
             df = df.apply(lambda col: pd.to_numeric(col, errors='ignore'))
             numeric_cols = df.select_dtypes(include=['number']).columns
             # Exclude ID columns from interpolation
-            id_columns = get_id_columns(df)
-            numeric_cols = [col for col in numeric_cols if col not in id_columns]
+            id_cols = id_columns or get_id_columns(df)
+            numeric_cols = [col for col in numeric_cols if col not in id_cols]
+            if target_columns:
+                numeric_cols = [c for c in numeric_cols if c in target_columns]
 
             if len(numeric_cols) > 0:
                 df[numeric_cols] = df[numeric_cols].interpolate(
@@ -207,6 +230,6 @@ def handle_missing_data(df: pd.DataFrame, missing_data_config: dict) -> pd.DataF
     # --- Fill Values ---
     fill_values_config = missing_data_config.get("fill_values")
     if fill_values_config:
-        df = apply_fill_values(df, fill_values_config)
+        df = apply_fill_values(df, fill_values_config, target_columns=target_columns, id_columns=id_columns)
 
     return df

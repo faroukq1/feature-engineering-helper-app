@@ -1,0 +1,508 @@
+student_id,first_name,last_name,gender,age,major,grade,gpa,enrollment_date,email
+1,James,Reyes,Female,23,Computer Science,C,3.85,2023-12-19,james.reyes@university.edu
+1,James,Reyes,Female,23,Computer Science,C,3.85,2023-12-19,james.reyes@university.edu
+1,James,Reyes,Female,23,Computer Science,C,3.85,2023-12-19,james.reyes@university.edu
+1,James,Reyes,Female,23,Computer Science,C,3.85,2023-12-19,james.reyes@university.edu
+1,James,Reyes,Female,23,Computer Science,C,3.85,2023-12-19,james.reyes@university.edu
+1,James,Reyes,Female,23,Computer Science,C,3.85,2023-12-19,james.reyes@university.edu
+2,Matthew,Baker,Female,22,Chemistry,F,3.91,2021-11-04,matthew.baker@university.edu
+3,Heather,Mcguire,Male,23,Biology,B,2.9,2022-04-22,heather.mcguire@university.edu
+4,Alexis,Horton,Male,24,Physics,C,1.93,2022-02-18,alexis.horton@university.edu
+5,Clayton,Franklin,Male,21,Mechanical Engineering,A,1.56,2025-01-30,clayton.franklin@university.edu
+6,Melissa,Park,Female,25,Business Administration,D,2.58,2025-07-25,melissa.park@university.edu
+7,Margaret,Hernandez,Male,23,Mechanical Engineering,D,2.15,2021-12-25,margaret.hernandez@university.edu
+8,Amanda,Page,Male,24,Computer Science,D,3.21,2022-02-06,amanda.page@university.edu
+9,Shawn,Baker,Female,24,Business Administration,B,3.78,2023-07-28,shawn.baker@university.edu
+10,Carmen,Morris,Male,20,Economics,A,1.74,2023-04-06,carmen.morris@university.edu
+11,Andre,Johnson,Female,20,Psychology,C,2.95,2022-03-17,andre.johnson@university.edu
+12,Steven,Williams,Male,24,Chemistry,A,2.15,2022-03-09,steven.williams@university.edu
+13,John,Rowe,Male,23,Mathematics,B,3.8,2023-07-22,john.rowe@university.edu
+14,Raymond,Baker,Male,23,Electrical Engineering,F,1.73,2022-08-20,raymond.baker@university.edu
+15,Julia,Wu,Male,19,Psychology,A,3.32,2024-06-07,julia.wu@university.edu
+16,James,Mckinney,Male,25,Physics,F,3.33,2022-05-29,james.mckinney@university.edu
+17,Anna,Pace,Male,25,Economics,D,3.34,2022-09-23,anna.pace@university.edu
+18,Michael,Hartman,Male,25,Mathematics,B,2.95,2025-01-24,michael.hartman@university.edu
+19,Javier,Ramirez,Female,18,Physics,A,2.49,2023-09-11,javier.ramirez@university.edu
+20,Ashlee,Johnson,Female,18,Physics,B,1.74,2024-06-17,ashlee.johnson@university.edu
+21,John,Adams,Female,22,Psychology,A,3.32,2022-02-25,john.adams@university.edu
+22,Alicia,Graham,Female,19,Psychology,A,3.1,2025-01-09,alicia.graham@university.edu
+23,Cheryl,Anderson,Male,24,Chemistry,C,3.89,2023-11-28,cheryl.anderson@university.edu
+24,Christopher,Elliott,Female,23,Electrical Engineering,B,1.53,2021-10-18,christopher.elliott@university.edu
+25,Frank,Williams,Female,21,Electrical Engineering,A,3.21,2023-02-04,frank.williams@university.edu
+26,Brandon,Ellis,Female,23,Physics,B,1.79,2025-07-17,brandon.ellis@university.edu
+27,Sarah,Fernandez,Male,23,Business Administration,F,3.25,2023-04-04,sarah.fernandez@university.edu
+28,Jamie,Torres,Male,24,Mechanical Engineering,F,2.32,2023-07-21,jamie.torres@university.edu
+29,Kevin,Velez,Male,20,Computer Science,F,2.1,2022-04-12,kevin.velez@university.edu
+30,Cathy,Yoder,Male,22,Business Administration,C,2.91,2022-09-17,cathy.yoder@university.edu
+31,Kathleen,Wallace,Male,23,Electrical Engineering,D,3.53,2025-04-13,kathleen.wallace@university.edu
+32,Marissa,Kemp,Male,20,Electrical Engineering,A,2.88,2024-10-31,marissa.kemp@university.edu
+33,Miranda,Mueller,Female,19,Electrical Engineering,F,3.52,2023-04-04,miranda.mueller@university.edu
+34,Brandon,Sanchez,Female,24,Psychology,A,2.4,2022-05-09,brandon.sanchez@university.edu
+35,Philip,Walker,Male,24,Mathematics,F,2.48,2021-10-23,philip.walker@university.edu
+36,Walter,King,Male,20,Mathematics,D,3.6,2024-03-19,walter.king@university.edu
+37,Eric,Archer,Male,20,Mathematics,B,1.61,2025-01-13,eric.archer@university.edu
+38,Brett,Faulkner,Female,21,Electrical Engineering,F,3.54,2023-01-27,brett.faulkner@university.edu
+39,Jenny,Evans,Female,21,Mathematics,D,2.21,2025-05-01,jenny.evans@university.edu
+40,Kimberly,Stephens,Male,23,Mechanical Engineering,A,3.02,2024-09-13,kimberly.stephens@university.edu
+41,Craig,Davis,Male,18,Mathematics,F,1.79,2021-10-27,craig.davis@university.edu
+42,Savannah,Brown,Male,18,Business Administration,B,3.06,2023-12-02,savannah.brown@university.edu
+43,Ronald,Goodman,Male,22,Mechanical Engineering,A,2.9,2022-11-14,ronald.goodman@university.edu
+44,Wendy,Smith,Female,19,Business Administration,A,1.5,2023-07-23,wendy.smith@university.edu
+45,Emily,Carr,Female,20,Mathematics,F,2.31,2025-05-16,emily.carr@university.edu
+46,Michael,Lee,Male,23,Computer Science,B,2.08,2023-12-24,michael.lee@university.edu
+47,Joseph,Cole,Male,21,Physics,F,2.86,2024-04-07,joseph.cole@university.edu
+48,Evan,Callahan,Female,25,Business Administration,B,2.81,2023-03-10,evan.callahan@university.edu
+49,Deborah,Klein,Female,18,Mechanical Engineering,D,1.78,2023-01-19,deborah.klein@university.edu
+50,Mary,Hill,Female,21,Mathematics,D,3.6,2024-01-20,mary.hill@university.edu
+51,Amber,Mendoza,Female,23,Computer Science,F,2.62,2022-06-18,amber.mendoza@university.edu
+52,William,Lee,Female,24,Chemistry,C,3.03,2024-03-05,william.lee@university.edu
+53,Steven,Holmes,Male,23,Biology,B,3.57,2023-08-03,steven.holmes@university.edu
+54,Jennifer,Davis,Male,23,Business Administration,C,3.86,2023-07-20,jennifer.davis@university.edu
+55,Steve,Jackson,Male,19,Mechanical Engineering,C,1.8,2022-11-28,steve.jackson@university.edu
+56,Deanna,Sullivan,Female,25,Mathematics,D,3.4,2024-10-05,deanna.sullivan@university.edu
+57,Blake,Keller,Male,24,Computer Science,F,3.96,2024-02-17,blake.keller@university.edu
+58,Monica,Strickland,Male,18,Psychology,C,3.53,2022-01-18,monica.strickland@university.edu
+59,Stefanie,Lambert,Male,19,Psychology,C,3.61,2022-02-15,stefanie.lambert@university.edu
+60,Stephanie,Soto,Female,24,Business Administration,F,3.68,2022-12-12,stephanie.soto@university.edu
+61,Victor,Walsh,Female,20,Biology,A,3.53,2025-08-25,victor.walsh@university.edu
+62,Andrew,Watson,Male,25,Biology,D,1.58,2023-10-07,andrew.watson@university.edu
+63,Brian,Smith,Female,24,Psychology,C,1.85,2021-10-15,brian.smith@university.edu
+64,Michael,Lewis,Male,18,Mathematics,A,2.66,2021-10-16,michael.lewis@university.edu
+65,Andrea,Costa,Female,21,Mathematics,D,1.7,2023-11-14,andrea.costa@university.edu
+66,Autumn,Spencer,Female,19,Physics,B,1.59,2024-02-14,autumn.spencer@university.edu
+67,Brianna,Roberson,Female,24,Biology,D,3.32,2022-11-17,brianna.roberson@university.edu
+68,Paul,Brooks,Female,24,Economics,F,3.65,2022-01-28,paul.brooks@university.edu
+69,Ryan,Logan,Female,22,Chemistry,D,1.93,2022-05-31,ryan.logan@university.edu
+70,James,Lopez,Female,18,Mechanical Engineering,F,2.62,2023-02-08,james.lopez@university.edu
+71,Jennifer,Davis,Male,24,Biology,D,3.21,2024-07-28,jennifer.davis@university.edu
+72,Christopher,Farmer,Female,24,Biology,B,1.74,2023-09-22,christopher.farmer@university.edu
+73,Mark,Cantu,Female,24,Business Administration,D,3.29,2022-11-26,mark.cantu@university.edu
+74,Cody,Gibson,Female,24,Mathematics,D,1.53,2025-02-20,cody.gibson@university.edu
+75,Shaun,Gates,Female,20,Business Administration,A,2.88,2023-03-07,shaun.gates@university.edu
+76,Joseph,Thompson,Female,24,Chemistry,C,2.75,2022-10-27,joseph.thompson@university.edu
+77,Kathleen,Smith,Male,22,Computer Science,C,3.33,2025-05-01,kathleen.smith@university.edu
+78,Ryan,Carter,Female,21,Biology,F,3.64,2023-08-27,ryan.carter@university.edu
+79,Danny,Fritz,Female,22,Mathematics,F,2.36,2021-12-25,danny.fritz@university.edu
+80,Dominique,Moody,Male,20,Physics,A,1.86,2023-05-28,dominique.moody@university.edu
+81,Christine,Lindsey,Female,24,Chemistry,F,2.8,2022-03-19,christine.lindsey@university.edu
+82,Nicholas,Mcdaniel,Male,21,Mathematics,F,2.55,2024-11-14,nicholas.mcdaniel@university.edu
+83,Kristen,Stevens,Female,19,Economics,D,1.99,2023-07-09,kristen.stevens@university.edu
+84,Rebecca,Norris,Female,19,Biology,F,3.13,2024-01-18,rebecca.norris@university.edu
+85,Monique,Collins,Female,20,Chemistry,B,3.15,2025-07-01,monique.collins@university.edu
+86,Andrew,Patterson,Male,23,Economics,F,1.68,2024-09-07,andrew.patterson@university.edu
+87,Rita,Pratt,Female,18,Physics,D,2.06,2022-04-24,rita.pratt@university.edu
+88,Tiffany,Roberts,Male,23,Physics,F,3.26,2022-07-12,tiffany.roberts@university.edu
+89,Tammy,Harris,Female,19,Biology,C,2.18,2022-04-30,tammy.harris@university.edu
+90,Jason,Ramirez,Male,21,Electrical Engineering,C,1.58,2022-04-06,jason.ramirez@university.edu
+91,Kyle,Peters,Male,20,Computer Science,B,1.86,2022-09-08,kyle.peters@university.edu
+92,Joseph,Benson,Female,19,Mechanical Engineering,D,3.89,2025-05-19,joseph.benson@university.edu
+93,Christopher,Bradley,Female,24,Business Administration,C,3.52,2022-03-22,christopher.bradley@university.edu
+94,Donna,Lopez,Female,24,Business Administration,D,3.42,2022-11-10,donna.lopez@university.edu
+95,Ray,Mcgee,Female,23,Economics,A,2.8,2023-07-02,ray.mcgee@university.edu
+96,Gary,Martin,Male,23,Economics,A,3.09,2024-10-09,gary.martin@university.edu
+97,Mitchell,Ruiz,Female,22,Chemistry,D,1.82,2022-11-26,mitchell.ruiz@university.edu
+98,Barbara,Duran,Female,23,Electrical Engineering,C,2.67,2023-06-19,barbara.duran@university.edu
+99,Melissa,Myers,Female,18,Mathematics,D,1.83,2025-02-03,melissa.myers@university.edu
+100,Hannah,Sawyer,Male,23,Computer Science,C,2.53,2023-01-07,hannah.sawyer@university.edu
+101,Christine,Scott,Female,19,Physics,A,2.66,2023-12-08,christine.scott@university.edu
+102,Shaun,Crawford,Female,25,Business Administration,C,2.23,2023-06-28,shaun.crawford@university.edu
+103,Jonathan,Nunez,Female,21,Physics,B,3.77,2021-12-25,jonathan.nunez@university.edu
+104,Emily,Duncan,Male,22,Computer Science,D,1.58,2025-01-16,emily.duncan@university.edu
+105,Craig,Hudson,Male,24,Biology,F,2.12,2022-10-15,craig.hudson@university.edu
+106,Alan,Owens,Male,20,Psychology,A,2.27,2024-01-06,alan.owens@university.edu
+107,Anthony,Jackson,Female,24,Computer Science,B,1.66,2025-03-13,anthony.jackson@university.edu
+108,Barbara,Smith,Female,18,Physics,B,3.05,2023-11-07,barbara.smith@university.edu
+109,Brittany,Acevedo,Male,20,Economics,F,2.66,2023-06-06,brittany.acevedo@university.edu
+110,Patricia,Allen,Male,18,Physics,F,1.96,2023-08-28,patricia.allen@university.edu
+111,Lonnie,Fisher,Female,25,Business Administration,B,3.55,2023-10-22,lonnie.fisher@university.edu
+112,Carrie,Johnson,Female,24,Biology,F,2.37,2022-07-27,carrie.johnson@university.edu
+113,Linda,Hardy,Female,21,Psychology,F,2.37,2021-12-18,linda.hardy@university.edu
+114,Adam,Taylor,Male,24,Economics,B,3.2,2022-04-30,adam.taylor@university.edu
+115,Melissa,Cunningham,Male,22,Electrical Engineering,B,2.28,2024-07-01,melissa.cunningham@university.edu
+116,Richard,Campos,Male,24,Mechanical Engineering,D,1.8,2022-08-03,richard.campos@university.edu
+117,Kevin,Mendoza,Male,21,Computer Science,A,3.6,2024-08-07,kevin.mendoza@university.edu
+118,Lisa,Glenn,Female,21,Chemistry,B,2.71,2021-10-28,lisa.glenn@university.edu
+119,Daniel,Diaz,Male,23,Computer Science,F,2.88,2022-12-13,daniel.diaz@university.edu
+120,Jason,Johnson,Male,24,Computer Science,F,1.79,2022-10-03,jason.johnson@university.edu
+121,Whitney,Duke,Female,25,Biology,C,3.76,2025-06-17,whitney.duke@university.edu
+122,Abigail,Barnes,Female,20,Computer Science,B,1.64,2022-08-25,abigail.barnes@university.edu
+123,Julie,Thomas,Male,18,Mathematics,D,3.85,2023-11-10,julie.thomas@university.edu
+124,Traci,Sloan,Female,18,Chemistry,D,1.81,2023-09-20,traci.sloan@university.edu
+125,William,Davis,Male,22,Mechanical Engineering,A,3.6,2024-08-15,william.davis@university.edu
+126,Luis,Perry,Female,24,Economics,F,3.93,2025-01-06,luis.perry@university.edu
+127,Bryan,Fox,Male,23,Biology,B,1.51,2022-10-28,bryan.fox@university.edu
+128,Daisy,Wilson,Male,22,Electrical Engineering,F,2.73,2024-02-28,daisy.wilson@university.edu
+129,Rachel,Stewart,Female,20,Business Administration,F,2.95,2024-03-16,rachel.stewart@university.edu
+130,Robert,Craig,Male,23,Business Administration,C,3.34,2025-06-09,robert.craig@university.edu
+131,Angela,Johnson,Female,24,Mechanical Engineering,F,2.11,2024-10-19,angela.johnson@university.edu
+132,Tina,Wallace,Male,19,Computer Science,B,1.88,2025-02-24,tina.wallace@university.edu
+133,Derrick,Mcdonald,Female,18,Biology,D,2.2,2025-07-29,derrick.mcdonald@university.edu
+134,Deborah,Brooks,Female,24,Biology,C,3.63,2025-03-31,deborah.brooks@university.edu
+135,Joshua,Lewis,Female,20,Biology,D,2.88,2025-08-23,joshua.lewis@university.edu
+136,Tyler,Thompson,Female,23,Mathematics,B,3.94,2024-08-31,tyler.thompson@university.edu
+137,Dorothy,Fitzgerald,Female,22,Business Administration,A,3.77,2023-04-02,dorothy.fitzgerald@university.edu
+138,Kyle,Nixon,Male,18,Chemistry,A,2.22,2024-07-06,kyle.nixon@university.edu
+139,Anthony,Williams,Female,24,Physics,A,3.42,2024-09-10,anthony.williams@university.edu
+140,Brenda,Garner,Male,24,Computer Science,F,3.73,2024-06-06,brenda.garner@university.edu
+141,Gabriel,Miller,Male,25,Business Administration,A,1.8,2023-08-22,gabriel.miller@university.edu
+142,Tamara,Turner,Male,25,Economics,A,3.34,2024-09-22,tamara.turner@university.edu
+143,Judy,Robbins,Male,25,Computer Science,C,2.63,2022-04-23,judy.robbins@university.edu
+144,Brianna,Meyer,Female,25,Mathematics,F,3.67,2024-08-15,brianna.meyer@university.edu
+145,Linda,Washington,Male,19,Business Administration,B,2.99,2022-02-23,linda.washington@university.edu
+146,Debbie,Richards,Female,24,Mechanical Engineering,C,3.44,2022-10-04,debbie.richards@university.edu
+147,Crystal,Abbott,Male,25,Physics,C,2.34,2024-11-21,crystal.abbott@university.edu
+148,Gene,Irwin,Female,18,Electrical Engineering,D,2.26,2023-11-04,gene.irwin@university.edu
+149,David,Brown,Female,24,Economics,F,1.76,2023-01-10,david.brown@university.edu
+150,Jose,Jordan,Female,19,Mechanical Engineering,A,3.9,2021-12-10,jose.jordan@university.edu
+151,Susan,Griffin,Female,18,Business Administration,D,3.05,2022-10-26,susan.griffin@university.edu
+152,Nichole,Reed,Male,21,Mathematics,D,1.55,2022-07-02,nichole.reed@university.edu
+153,James,Anderson,Female,24,Electrical Engineering,A,2.26,2023-03-26,james.anderson@university.edu
+154,Heather,Bowen,Male,25,Biology,D,2.25,2022-09-14,heather.bowen@university.edu
+155,Amanda,Mcintosh,Male,19,Business Administration,A,1.85,2023-12-06,amanda.mcintosh@university.edu
+156,Scott,Webster,Male,19,Chemistry,D,1.96,2023-07-03,scott.webster@university.edu
+157,Scott,Jones,Male,19,Computer Science,D,2.87,2025-08-12,scott.jones@university.edu
+158,Paula,Thompson,Female,23,Psychology,B,1.93,2024-06-17,paula.thompson@university.edu
+159,Matthew,Conley,Male,22,Chemistry,A,2.49,2023-02-14,matthew.conley@university.edu
+160,Marie,Bradshaw,Male,22,Computer Science,F,2.51,2022-08-03,marie.bradshaw@university.edu
+161,Emily,Little,Male,24,Psychology,F,2.69,2022-11-24,emily.little@university.edu
+162,Joseph,Arnold,Female,24,Economics,F,3.76,2023-02-15,joseph.arnold@university.edu
+163,Michele,Hawkins,Male,23,Economics,C,3.37,2022-10-10,michele.hawkins@university.edu
+164,Emily,Lucas,Female,24,Economics,C,1.98,2025-03-08,emily.lucas@university.edu
+165,David,Shelton,Female,21,Mathematics,A,2.03,2022-06-23,david.shelton@university.edu
+166,Alicia,Le,Female,18,Mathematics,F,2.55,2024-10-19,alicia.le@university.edu
+167,Michael,Johnson,Male,20,Mathematics,F,2.25,2025-06-06,michael.johnson@university.edu
+168,Jason,Brown,Male,23,Mechanical Engineering,A,1.75,2024-02-18,jason.brown@university.edu
+169,Stanley,Baker,Female,19,Chemistry,A,2.83,2022-12-23,stanley.baker@university.edu
+170,Rebecca,Reese,Male,21,Biology,A,3.8,2023-07-26,rebecca.reese@university.edu
+171,Pamela,Thomas,Female,20,Mathematics,D,3.8,2022-04-01,pamela.thomas@university.edu
+172,Daniel,Shepard,Male,24,Biology,A,2.14,2023-12-29,daniel.shepard@university.edu
+173,Christopher,Robles,Male,21,Biology,D,2.66,2022-11-27,christopher.robles@university.edu
+174,Kathryn,Rodriguez,Male,19,Mechanical Engineering,A,3.1,2022-11-16,kathryn.rodriguez@university.edu
+175,Justin,Beck,Female,22,Mathematics,F,3.16,2023-08-14,justin.beck@university.edu
+176,Lori,Myers,Male,23,Psychology,F,1.54,2024-12-20,lori.myers@university.edu
+177,Michelle,Lopez,Female,24,Mechanical Engineering,B,2.45,2025-09-03,michelle.lopez@university.edu
+178,Deborah,Pham,Female,22,Electrical Engineering,C,3.51,2023-02-16,deborah.pham@university.edu
+179,Cynthia,Lynn,Female,25,Economics,F,1.7,2022-04-03,cynthia.lynn@university.edu
+180,Sara,Buchanan,Female,23,Business Administration,F,2.29,2023-06-27,sara.buchanan@university.edu
+181,David,Jordan,Female,24,Mathematics,B,2.68,2024-04-25,david.jordan@university.edu
+182,Andrew,Keller,Male,21,Mathematics,C,3.35,2024-11-18,andrew.keller@university.edu
+183,Melissa,Trujillo,Female,25,Electrical Engineering,A,1.77,2023-01-31,melissa.trujillo@university.edu
+184,Gina,Clayton,Female,21,Mathematics,F,1.75,2025-02-03,gina.clayton@university.edu
+185,George,Lewis,Female,21,Mechanical Engineering,F,2.63,2021-11-04,george.lewis@university.edu
+186,Jonathan,Page,Male,23,Biology,B,1.72,2022-01-03,jonathan.page@university.edu
+187,Juan,Taylor,Female,19,Biology,C,3.16,2024-01-18,juan.taylor@university.edu
+188,Angelica,Walsh,Male,18,Electrical Engineering,F,2.88,2021-12-06,angelica.walsh@university.edu
+189,Teresa,Jones,Male,20,Mathematics,C,3.11,2022-08-29,teresa.jones@university.edu
+190,Michael,Bass,Male,21,Chemistry,C,3.41,2023-04-20,michael.bass@university.edu
+191,Rachel,Roberts,Female,24,Mechanical Engineering,D,1.95,2022-12-25,rachel.roberts@university.edu
+192,Anna,Lopez,Female,18,Psychology,B,3.89,2024-06-01,anna.lopez@university.edu
+193,Carlos,Mooney,Male,20,Mechanical Engineering,A,2.73,2024-02-23,carlos.mooney@university.edu
+194,Susan,Schaefer,Male,18,Mechanical Engineering,D,3.74,2023-05-17,susan.schaefer@university.edu
+195,Christopher,Fleming,Male,25,Economics,F,3.11,2024-11-16,christopher.fleming@university.edu
+196,Christina,Arnold,Male,19,Economics,F,1.8,2024-03-12,christina.arnold@university.edu
+197,Tiffany,Mcconnell,Male,23,Psychology,F,3.13,2025-04-03,tiffany.mcconnell@university.edu
+198,Amanda,Cervantes,Male,22,Psychology,F,1.57,2025-01-15,amanda.cervantes@university.edu
+199,Alexander,Weiss,Male,23,Biology,A,3.78,2023-09-06,alexander.weiss@university.edu
+200,Adam,Alvarez,Female,22,Business Administration,A,3.59,2022-09-27,adam.alvarez@university.edu
+201,Tracy,Jones,Male,23,Mechanical Engineering,F,2.59,2023-06-12,tracy.jones@university.edu
+202,William,Young,Male,25,Physics,A,3.37,2024-07-03,william.young@university.edu
+203,Douglas,Henderson,Female,18,Psychology,B,3.21,2025-10-04,douglas.henderson@university.edu
+204,Erin,Walters,Female,25,Physics,B,2.77,2022-12-01,erin.walters@university.edu
+205,Brian,Martinez,Male,21,Physics,C,3.61,2024-05-02,brian.martinez@university.edu
+206,Jacqueline,Payne,Male,20,Biology,A,3.16,2024-12-23,jacqueline.payne@university.edu
+207,Karen,Johnson,Male,23,Biology,D,2.46,2025-01-13,karen.johnson@university.edu
+208,Jeff,Knox,Male,23,Mechanical Engineering,F,2.84,2024-05-31,jeff.knox@university.edu
+209,Kelly,Marsh,Male,20,Mechanical Engineering,A,1.67,2022-11-14,kelly.marsh@university.edu
+210,Ana,Miller,Male,18,Physics,A,3.71,2025-04-28,ana.miller@university.edu
+211,Joel,Garrett,Male,20,Business Administration,C,2.47,2025-08-15,joel.garrett@university.edu
+212,Jesus,White,Female,23,Computer Science,A,2.95,2025-04-07,jesus.white@university.edu
+213,Derek,Perez,Male,24,Mathematics,F,3.05,2024-09-26,derek.perez@university.edu
+214,David,Rich,Male,24,Electrical Engineering,D,2.72,2022-09-21,david.rich@university.edu
+215,Kathryn,Harrison,Female,22,Computer Science,A,3.63,2025-08-05,kathryn.harrison@university.edu
+216,Valerie,Booker,Female,22,Physics,D,3.29,2023-07-26,valerie.booker@university.edu
+217,Matthew,Turner,Female,19,Economics,B,3.3,2023-06-24,matthew.turner@university.edu
+218,Brittany,Schmidt,Female,22,Computer Science,A,2.15,2024-09-29,brittany.schmidt@university.edu
+219,Courtney,Campbell,Male,19,Biology,C,3.21,2022-05-04,courtney.campbell@university.edu
+220,Nicole,Wright,Female,25,Chemistry,B,2.18,2025-02-24,nicole.wright@university.edu
+221,Michael,Ball,Male,23,Physics,F,1.73,2022-08-07,michael.ball@university.edu
+222,Robyn,Ramirez,Male,25,Biology,C,3.27,2024-02-12,robyn.ramirez@university.edu
+223,Bradley,Hall,Female,22,Electrical Engineering,A,2.42,2022-03-26,bradley.hall@university.edu
+224,Cassandra,Ballard,Male,23,Electrical Engineering,C,3.79,2024-11-26,cassandra.ballard@university.edu
+225,Carrie,Chaney,Female,23,Economics,A,1.83,2023-08-16,carrie.chaney@university.edu
+226,Janice,Mendez,Male,19,Chemistry,D,3.91,2024-04-16,janice.mendez@university.edu
+227,Gregory,Carter,Male,18,Economics,C,2.39,2024-05-04,gregory.carter@university.edu
+228,Patricia,Moreno,Male,22,Business Administration,B,2.39,2024-12-29,patricia.moreno@university.edu
+229,Jill,Nichols,Female,19,Computer Science,C,3.03,2025-05-15,jill.nichols@university.edu
+230,Nicholas,Hicks,Male,23,Electrical Engineering,C,1.56,2023-11-07,nicholas.hicks@university.edu
+231,Lauren,Porter,Male,22,Computer Science,D,1.86,2025-06-30,lauren.porter@university.edu
+232,Joseph,Dixon,Female,21,Mathematics,C,3.77,2023-05-19,joseph.dixon@university.edu
+233,Dennis,Mercado,Male,23,Biology,B,1.75,2023-10-11,dennis.mercado@university.edu
+234,Ryan,Montgomery,Male,18,Electrical Engineering,D,3.29,2024-01-05,ryan.montgomery@university.edu
+235,Curtis,Martin,Female,25,Computer Science,B,2.23,2025-01-31,curtis.martin@university.edu
+236,Brian,Jones,Female,22,Biology,A,1.72,2025-02-26,brian.jones@university.edu
+237,Jose,Cooper,Male,24,Computer Science,D,3.15,2025-02-14,jose.cooper@university.edu
+238,Victoria,Burns,Male,22,Physics,F,1.83,2025-05-16,victoria.burns@university.edu
+239,Aaron,Osborne,Male,24,Biology,F,2.43,2022-12-13,aaron.osborne@university.edu
+240,Victoria,Perez,Female,20,Business Administration,B,2.74,2022-02-09,victoria.perez@university.edu
+241,Regina,Rogers,Male,20,Chemistry,C,3.5,2022-08-07,regina.rogers@university.edu
+242,Jodi,Smith,Male,19,Chemistry,A,1.83,2022-01-28,jodi.smith@university.edu
+243,Natasha,Cook,Female,22,Mathematics,D,2.99,2023-01-31,natasha.cook@university.edu
+244,Christie,Fletcher,Male,23,Economics,A,3.46,2025-02-26,christie.fletcher@university.edu
+245,Wendy,Gonzalez,Male,20,Chemistry,F,2.49,2024-12-28,wendy.gonzalez@university.edu
+246,Courtney,Booth,Male,21,Economics,A,1.79,2024-11-18,courtney.booth@university.edu
+247,James,Stone,Female,23,Chemistry,F,3.2,2025-08-22,james.stone@university.edu
+248,Alexandria,Hurst,Female,25,Economics,C,3.14,2022-09-11,alexandria.hurst@university.edu
+249,Andrew,Nicholson,Female,19,Business Administration,B,3.42,2023-03-21,andrew.nicholson@university.edu
+250,Alyssa,Berg,Male,19,Physics,F,3.53,2023-09-25,alyssa.berg@university.edu
+251,Jennifer,Anderson,Male,23,Mechanical Engineering,D,2.08,2025-05-15,jennifer.anderson@university.edu
+252,Frederick,Roberts,Male,19,Economics,F,3.63,2022-03-08,frederick.roberts@university.edu
+253,Matthew,Harris,Female,22,Psychology,B,2.91,2024-06-26,matthew.harris@university.edu
+254,Samantha,Rose,Male,20,Biology,C,2.46,2022-10-31,samantha.rose@university.edu
+255,Richard,Greene,Female,22,Mechanical Engineering,F,3.87,2022-03-27,richard.greene@university.edu
+256,Sharon,Yoder,Female,21,Biology,A,3.65,2024-02-01,sharon.yoder@university.edu
+257,Jennifer,Lucero,Female,21,Computer Science,A,3.54,2025-03-09,jennifer.lucero@university.edu
+258,Lucas,Garcia,Female,25,Physics,B,2.09,2025-07-15,lucas.garcia@university.edu
+259,Marcus,Campbell,Female,24,Electrical Engineering,D,2.41,2023-04-29,marcus.campbell@university.edu
+260,John,Myers,Male,24,Business Administration,A,2.14,2023-10-24,john.myers@university.edu
+261,Victoria,Henderson,Female,20,Physics,C,3.7,2024-08-10,victoria.henderson@university.edu
+262,Gregory,Carter,Female,22,Electrical Engineering,B,2.0,2024-09-18,gregory.carter@university.edu
+263,James,Cochran,Male,22,Physics,B,1.74,2021-10-26,james.cochran@university.edu
+264,Heather,Wells,Female,18,Computer Science,A,3.04,2023-06-06,heather.wells@university.edu
+265,Lauren,Sweeney,Female,21,Biology,C,3.81,2025-02-27,lauren.sweeney@university.edu
+266,Mario,Calhoun,Male,22,Biology,B,2.37,2023-05-16,mario.calhoun@university.edu
+267,Michelle,Valencia,Female,25,Mathematics,C,2.8,2024-08-22,michelle.valencia@university.edu
+268,Tanner,Chan,Male,18,Business Administration,C,3.12,2023-11-24,tanner.chan@university.edu
+269,Harold,Miller,Female,22,Computer Science,B,3.46,2024-09-29,harold.miller@university.edu
+270,Justin,Reed,Female,21,Mechanical Engineering,B,3.92,2021-11-14,justin.reed@university.edu
+271,Alexander,Patel,Male,24,Physics,A,3.69,2022-09-24,alexander.patel@university.edu
+272,Alexis,Douglas,Male,22,Psychology,A,1.54,2023-05-12,alexis.douglas@university.edu
+273,Tina,Osborne,Female,23,Psychology,D,3.49,2023-03-01,tina.osborne@university.edu
+274,Shannon,Boyle,Female,25,Electrical Engineering,C,3.62,2023-09-01,shannon.boyle@university.edu
+275,Amy,Hall,Male,21,Business Administration,F,3.04,2024-10-22,amy.hall@university.edu
+276,Lori,Smith,Female,21,Psychology,B,1.83,2025-02-27,lori.smith@university.edu
+277,Curtis,Glenn,Male,23,Economics,F,2.33,2023-03-20,curtis.glenn@university.edu
+278,Samantha,Molina,Male,19,Business Administration,F,2.04,2023-05-02,samantha.molina@university.edu
+279,Anthony,Clark,Male,24,Psychology,A,3.75,2023-05-27,anthony.clark@university.edu
+280,Kevin,Donovan,Female,21,Mathematics,C,2.44,2025-08-08,kevin.donovan@university.edu
+281,Daniel,Graham,Male,19,Computer Science,C,3.73,2024-10-21,daniel.graham@university.edu
+282,Cassandra,Davis,Male,23,Electrical Engineering,C,1.52,2025-06-21,cassandra.davis@university.edu
+283,Mary,Ewing,Female,19,Chemistry,C,2.27,2021-10-27,mary.ewing@university.edu
+284,Maxwell,Dennis,Male,19,Biology,C,2.06,2023-12-27,maxwell.dennis@university.edu
+285,Paul,Branch,Male,18,Biology,D,3.18,2025-04-07,paul.branch@university.edu
+286,Heidi,Adams,Female,25,Psychology,A,2.59,2023-07-02,heidi.adams@university.edu
+287,Michele,Stafford,Male,20,Psychology,B,3.0,2023-04-16,michele.stafford@university.edu
+288,Tara,Larson,Female,18,Computer Science,F,2.86,2022-10-18,tara.larson@university.edu
+289,Nicholas,Vasquez,Male,23,Physics,A,1.59,2021-12-27,nicholas.vasquez@university.edu
+290,Teresa,Everett,Female,18,Chemistry,F,3.65,2021-11-24,teresa.everett@university.edu
+291,Alice,Bishop,Male,23,Biology,D,2.64,2023-04-09,alice.bishop@university.edu
+292,Brandon,Johnson,Male,23,Physics,A,1.89,2022-03-09,brandon.johnson@university.edu
+293,Timothy,Mitchell,Female,18,Business Administration,B,3.35,2022-03-08,timothy.mitchell@university.edu
+294,Alexander,Ross,Male,25,Psychology,B,3.13,2023-07-25,alexander.ross@university.edu
+295,Michelle,May,Male,22,Business Administration,B,2.24,2025-03-02,michelle.may@university.edu
+296,Austin,Johnson,Male,18,Biology,C,2.37,2023-07-10,austin.johnson@university.edu
+297,Debra,Hernandez,Female,20,Electrical Engineering,D,2.51,2024-11-29,debra.hernandez@university.edu
+298,Robert,Bradley,Female,23,Biology,B,3.75,2022-03-16,robert.bradley@university.edu
+299,Martin,Blair,Male,21,Psychology,D,2.71,2024-06-08,martin.blair@university.edu
+300,Billy,Davis,Female,18,Business Administration,A,1.75,2023-04-23,billy.davis@university.edu
+301,Barbara,Gallegos,Female,19,Computer Science,C,3.11,2022-04-20,barbara.gallegos@university.edu
+302,Brian,Miller,Male,20,Biology,F,2.99,2025-05-29,brian.miller@university.edu
+303,Daniel,Perkins,Female,23,Mathematics,F,2.03,2025-04-26,daniel.perkins@university.edu
+304,Robert,Glass,Female,24,Electrical Engineering,F,2.03,2024-12-09,robert.glass@university.edu
+305,Katherine,Cabrera,Male,20,Computer Science,D,3.32,2022-06-18,katherine.cabrera@university.edu
+306,John,Castillo,Female,24,Biology,F,2.31,2024-02-29,john.castillo@university.edu
+307,Cassie,Robertson,Male,18,Computer Science,C,1.69,2024-09-29,cassie.robertson@university.edu
+308,Sara,Ramsey,Female,20,Biology,B,3.59,2022-09-27,sara.ramsey@university.edu
+309,Pamela,Brown,Male,25,Physics,A,1.71,2022-08-27,pamela.brown@university.edu
+310,Angela,Hernandez,Female,22,Economics,B,2.27,2022-11-21,angela.hernandez@university.edu
+311,Andrew,Baldwin,Male,22,Business Administration,F,1.6,2025-09-18,andrew.baldwin@university.edu
+312,Patrick,Russell,Female,18,Mathematics,F,3.15,2025-04-07,patrick.russell@university.edu
+313,Tiffany,Jones,Female,22,Chemistry,D,2.09,2024-07-17,tiffany.jones@university.edu
+314,James,Dominguez,Female,19,Mathematics,D,2.79,2023-01-14,james.dominguez@university.edu
+315,Luis,Johnson,Female,20,Chemistry,C,2.79,2024-12-21,luis.johnson@university.edu
+316,Dakota,Morris,Male,23,Computer Science,F,3.5,2025-08-19,dakota.morris@university.edu
+317,Ashley,Sharp,Female,23,Mechanical Engineering,C,2.16,2025-04-29,ashley.sharp@university.edu
+318,Ruth,Beasley,Female,25,Mechanical Engineering,C,2.15,2022-01-18,ruth.beasley@university.edu
+319,Amanda,Harvey,Male,20,Physics,D,1.93,2023-11-20,amanda.harvey@university.edu
+320,Michael,Allen,Male,23,Economics,A,3.06,2024-07-27,michael.allen@university.edu
+321,John,Reeves,Male,19,Business Administration,F,2.63,2022-05-21,john.reeves@university.edu
+322,Ashley,Kerr,Female,19,Mathematics,A,2.55,2022-04-02,ashley.kerr@university.edu
+323,Ann,Whitehead,Male,18,Economics,C,3.59,2025-02-05,ann.whitehead@university.edu
+324,John,Jackson,Female,24,Psychology,D,3.16,2023-08-17,john.jackson@university.edu
+325,Gregory,Collier,Female,22,Mechanical Engineering,A,3.52,2023-06-12,gregory.collier@university.edu
+326,Desiree,Robinson,Female,21,Electrical Engineering,B,3.11,2024-06-22,desiree.robinson@university.edu
+327,Jeffrey,Garza,Male,20,Physics,F,3.78,2024-03-16,jeffrey.garza@university.edu
+328,John,Beltran,Male,18,Biology,A,2.23,2022-04-04,john.beltran@university.edu
+329,Briana,Brown,Female,23,Computer Science,C,3.1,2025-07-02,briana.brown@university.edu
+330,Jill,Craig,Male,25,Chemistry,A,2.21,2024-10-21,jill.craig@university.edu
+331,Ashlee,Ponce,Male,21,Computer Science,B,3.03,2022-11-25,ashlee.ponce@university.edu
+332,Kathleen,Murphy,Male,19,Economics,B,1.74,2023-09-01,kathleen.murphy@university.edu
+333,Shawn,Obrien,Male,18,Mechanical Engineering,C,1.9,2021-12-15,shawn.obrien@university.edu
+334,James,Rodriguez,Male,25,Business Administration,D,2.75,2024-03-15,james.rodriguez@university.edu
+335,Christopher,Wilson,Female,21,Psychology,F,2.72,2024-03-12,christopher.wilson@university.edu
+336,Michelle,Gamble,Female,19,Physics,F,2.64,2023-04-10,michelle.gamble@university.edu
+337,Chelsea,Vazquez,Male,19,Computer Science,D,3.54,2022-11-05,chelsea.vazquez@university.edu
+338,Sean,Johnston,Female,24,Mathematics,F,2.79,2025-01-03,sean.johnston@university.edu
+339,Teresa,Foley,Male,19,Computer Science,C,1.7,2023-07-05,teresa.foley@university.edu
+340,Sara,Smith,Female,19,Mathematics,D,2.35,2023-12-02,sara.smith@university.edu
+341,Thomas,Johnson,Male,23,Business Administration,A,3.07,2025-07-25,thomas.johnson@university.edu
+342,Robert,Peterson,Male,18,Psychology,D,2.76,2025-07-07,robert.peterson@university.edu
+343,Devin,Garcia,Male,18,Mathematics,B,2.59,2022-07-24,devin.garcia@university.edu
+344,James,White,Male,22,Electrical Engineering,A,1.93,2023-09-08,james.white@university.edu
+345,Felicia,Fitzgerald,Female,23,Psychology,A,2.19,2025-01-24,felicia.fitzgerald@university.edu
+346,Tiffany,Alvarado,Female,25,Mathematics,A,3.29,2025-09-17,tiffany.alvarado@university.edu
+347,Julie,Ruiz,Male,23,Electrical Engineering,D,2.33,2024-03-05,julie.ruiz@university.edu
+348,Rebekah,Larsen,Male,22,Computer Science,F,2.0,2022-02-04,rebekah.larsen@university.edu
+349,Bradley,Moore,Female,21,Physics,F,3.11,2022-01-13,bradley.moore@university.edu
+350,Robert,Anderson,Female,21,Business Administration,F,2.92,2024-04-02,robert.anderson@university.edu
+351,William,Bryant,Male,24,Electrical Engineering,A,2.92,2023-07-26,william.bryant@university.edu
+352,Norma,Brooks,Female,20,Economics,D,2.53,2024-10-29,norma.brooks@university.edu
+353,Jessica,Maxwell,Female,21,Mechanical Engineering,F,2.55,2024-08-04,jessica.maxwell@university.edu
+354,Jason,Sherman,Male,21,Chemistry,B,3.31,2022-07-07,jason.sherman@university.edu
+355,Dillon,Hayden,Female,25,Business Administration,B,3.45,2024-09-30,dillon.hayden@university.edu
+356,Jessica,White,Female,21,Biology,F,3.74,2025-07-13,jessica.white@university.edu
+357,Michelle,Deleon,Female,21,Mathematics,C,3.55,2025-06-12,michelle.deleon@university.edu
+358,John,Jones,Male,22,Chemistry,B,3.5,2025-04-23,john.jones@university.edu
+359,Mark,Harrell,Male,20,Mechanical Engineering,D,2.53,2024-01-11,mark.harrell@university.edu
+360,Ryan,Golden,Male,23,Economics,A,3.5,2025-02-21,ryan.golden@university.edu
+361,Michael,Owens,Female,21,Mathematics,A,3.27,2024-06-08,michael.owens@university.edu
+362,Stephanie,Phillips,Male,21,Mechanical Engineering,B,3.94,2023-02-10,stephanie.phillips@university.edu
+363,Lisa,Lee,Male,19,Computer Science,F,2.59,2025-08-02,lisa.lee@university.edu
+364,Monica,Schneider,Male,21,Physics,B,2.26,2021-10-17,monica.schneider@university.edu
+365,Jillian,Lucas,Male,22,Chemistry,D,2.16,2023-03-21,jillian.lucas@university.edu
+366,Veronica,Brooks,Female,18,Economics,F,3.29,2024-01-07,veronica.brooks@university.edu
+367,Annette,Mcguire,Male,22,Biology,F,2.99,2023-07-08,annette.mcguire@university.edu
+368,Kelsey,Wilcox,Female,20,Computer Science,D,3.19,2023-08-01,kelsey.wilcox@university.edu
+369,Michael,Murphy,Female,20,Physics,B,1.61,2024-09-08,michael.murphy@university.edu
+370,Susan,Gaines,Male,22,Mechanical Engineering,A,1.91,2024-03-05,susan.gaines@university.edu
+371,Rachel,Cole,Female,19,Mathematics,A,2.52,2022-09-16,rachel.cole@university.edu
+372,Joseph,Potter,Female,19,Business Administration,B,2.73,2023-02-03,joseph.potter@university.edu
+373,Andrew,Taylor,Female,22,Mechanical Engineering,C,3.56,2024-01-08,andrew.taylor@university.edu
+374,Jessica,Beard,Female,20,Electrical Engineering,D,2.86,2023-07-13,jessica.beard@university.edu
+375,Michael,Mitchell,Female,19,Chemistry,C,1.76,2025-05-30,michael.mitchell@university.edu
+376,Karen,Salazar,Female,22,Electrical Engineering,B,3.45,2022-05-06,karen.salazar@university.edu
+377,Kaitlyn,Cannon,Male,19,Mechanical Engineering,A,3.71,2024-02-02,kaitlyn.cannon@university.edu
+378,Kimberly,Reyes,Female,23,Physics,F,3.06,2024-05-30,kimberly.reyes@university.edu
+379,Caleb,Garrett,Male,24,Mechanical Engineering,C,2.4,2023-07-17,caleb.garrett@university.edu
+380,Robert,Morrison,Female,25,Psychology,B,3.01,2025-09-18,robert.morrison@university.edu
+381,Timothy,Carr,Female,19,Chemistry,C,3.88,2024-10-03,timothy.carr@university.edu
+382,Angelica,Horton,Male,25,Mechanical Engineering,A,2.95,2024-07-02,angelica.horton@university.edu
+383,James,Carpenter,Female,23,Psychology,D,2.43,2024-01-18,james.carpenter@university.edu
+384,Aaron,Adams,Male,21,Psychology,B,3.13,2025-07-04,aaron.adams@university.edu
+385,Jacob,Valdez,Female,18,Physics,F,2.57,2021-11-13,jacob.valdez@university.edu
+386,Michael,Miranda,Female,19,Computer Science,D,2.05,2025-09-08,michael.miranda@university.edu
+387,Karen,Miller,Male,24,Biology,A,2.4,2024-07-04,karen.miller@university.edu
+388,Eric,Harding,Female,25,Physics,B,3.5,2021-11-08,eric.harding@university.edu
+389,Stephanie,Joseph,Male,19,Computer Science,B,3.98,2022-03-27,stephanie.joseph@university.edu
+390,Audrey,Myers,Male,22,Chemistry,F,2.56,2024-03-20,audrey.myers@university.edu
+391,James,Good,Female,24,Economics,F,3.63,2021-10-21,james.good@university.edu
+392,Anthony,Peterson,Male,25,Physics,D,1.65,2022-01-25,anthony.peterson@university.edu
+393,Deborah,Wright,Male,24,Mathematics,B,3.59,2022-11-09,deborah.wright@university.edu
+394,Tara,Forbes,Female,22,Mechanical Engineering,F,3.61,2025-05-14,tara.forbes@university.edu
+395,James,Hamilton,Female,22,Physics,D,2.65,2025-07-06,james.hamilton@university.edu
+396,Jessica,Walters,Male,22,Electrical Engineering,D,1.88,2021-10-31,jessica.walters@university.edu
+397,Amy,Pratt,Male,22,Economics,B,3.0,2025-05-14,amy.pratt@university.edu
+398,Amber,Martinez,Female,19,Economics,B,2.97,2022-12-26,amber.martinez@university.edu
+399,Wendy,Clark,Female,19,Mathematics,D,3.28,2024-05-12,wendy.clark@university.edu
+400,Paula,Scott,Female,23,Biology,F,2.78,2023-09-04,paula.scott@university.edu
+401,Anna,Sutton,Female,22,Psychology,D,3.23,2022-05-03,anna.sutton@university.edu
+402,Andrea,Lopez,Male,21,Biology,B,2.1,2023-04-17,andrea.lopez@university.edu
+403,Kyle,Martin,Male,24,Biology,B,3.62,2022-05-27,kyle.martin@university.edu
+404,David,Rogers,Male,23,Physics,C,1.91,2025-04-06,david.rogers@university.edu
+405,Shelly,Hooper,Female,20,Psychology,B,2.74,2022-06-01,shelly.hooper@university.edu
+406,Lauren,Coleman,Male,22,Computer Science,D,3.64,2023-04-19,lauren.coleman@university.edu
+407,Michelle,Bernard,Male,22,Computer Science,C,3.6,2023-11-26,michelle.bernard@university.edu
+408,Jeremiah,Carrillo,Female,23,Electrical Engineering,C,2.26,2021-11-11,jeremiah.carrillo@university.edu
+409,Johnny,Miller,Female,24,Biology,B,1.74,2024-02-16,johnny.miller@university.edu
+410,Ruth,Molina,Female,25,Physics,F,3.15,2024-04-11,ruth.molina@university.edu
+411,Morgan,Spencer,Female,20,Mathematics,C,2.78,2022-06-02,morgan.spencer@university.edu
+412,Richard,Marshall,Female,25,Electrical Engineering,C,1.72,2024-10-28,richard.marshall@university.edu
+413,Omar,Navarro,Female,25,Chemistry,B,2.97,2022-01-25,omar.navarro@university.edu
+414,Kevin,Lewis,Male,22,Computer Science,F,2.53,2023-01-11,kevin.lewis@university.edu
+415,Nancy,Hurst,Female,21,Electrical Engineering,A,2.38,2024-04-18,nancy.hurst@university.edu
+416,David,Johnson,Female,19,Mechanical Engineering,A,3.3,2025-07-24,david.johnson@university.edu
+417,Brad,Cox,Male,25,Electrical Engineering,C,4.0,2022-09-25,brad.cox@university.edu
+418,Joshua,Perez,Female,22,Mechanical Engineering,A,2.96,2025-07-05,joshua.perez@university.edu
+419,Patricia,Brown,Male,25,Psychology,A,2.3,2024-06-29,patricia.brown@university.edu
+420,Megan,Williams,Female,24,Mechanical Engineering,B,3.76,2022-04-14,megan.williams@university.edu
+421,Andrew,Gonzalez,Male,23,Physics,D,3.34,2024-02-23,andrew.gonzalez@university.edu
+422,James,Terry,Female,25,Business Administration,A,1.75,2022-09-02,james.terry@university.edu
+423,David,Young,Female,19,Physics,D,2.13,2025-05-13,david.young@university.edu
+424,Audrey,Murphy,Male,23,Computer Science,D,3.41,2023-05-17,audrey.murphy@university.edu
+425,Gregory,Harris,Female,25,Chemistry,C,2.02,2023-09-19,gregory.harris@university.edu
+426,Lori,Hernandez,Male,18,Computer Science,A,1.53,2022-06-24,lori.hernandez@university.edu
+427,Jay,Sims,Male,18,Mathematics,B,3.68,2023-04-02,jay.sims@university.edu
+428,Thomas,Smith,Female,20,Biology,F,2.46,2023-09-24,thomas.smith@university.edu
+429,Gregory,Bishop,Male,23,Mechanical Engineering,A,2.66,2024-11-14,gregory.bishop@university.edu
+430,Jasmine,Huber,Male,19,Economics,B,2.92,2022-06-12,jasmine.huber@university.edu
+431,Anthony,White,Female,23,Mathematics,D,1.7,2022-08-16,anthony.white@university.edu
+432,Kevin,Murphy,Female,25,Mechanical Engineering,F,3.43,2024-12-23,kevin.murphy@university.edu
+433,Angela,Lee,Female,22,Business Administration,F,3.36,2024-02-29,angela.lee@university.edu
+434,Brian,Jimenez,Male,21,Psychology,B,2.34,2024-01-05,brian.jimenez@university.edu
+435,Jason,Cole,Male,21,Economics,B,2.31,2024-01-09,jason.cole@university.edu
+436,Scott,Gibson,Female,20,Chemistry,B,2.63,2024-05-22,scott.gibson@university.edu
+437,Thomas,Torres,Female,25,Physics,D,2.69,2022-05-16,thomas.torres@university.edu
+438,Sharon,Sullivan,Male,22,Psychology,C,3.23,2025-09-24,sharon.sullivan@university.edu
+439,Thomas,Ellis,Male,24,Business Administration,A,2.08,2022-03-21,thomas.ellis@university.edu
+440,Alexander,Johnson,Female,18,Economics,B,2.56,2024-01-23,alexander.johnson@university.edu
+441,Maurice,Walker,Female,21,Computer Science,A,1.71,2022-01-10,maurice.walker@university.edu
+442,Brooke,Larson,Male,20,Electrical Engineering,D,3.81,2024-04-21,brooke.larson@university.edu
+443,Nicole,Rodriguez,Male,21,Physics,C,2.93,2021-11-01,nicole.rodriguez@university.edu
+444,Albert,Miller,Male,21,Mathematics,D,2.13,2021-10-24,albert.miller@university.edu
+445,Gregory,Jacobson,Male,20,Physics,A,3.5,2023-09-10,gregory.jacobson@university.edu
+446,Jeffrey,Steele,Female,21,Mechanical Engineering,D,3.48,2024-07-16,jeffrey.steele@university.edu
+447,Samuel,Hartman,Male,18,Mathematics,A,2.71,2023-03-25,samuel.hartman@university.edu
+448,Karen,Mcconnell,Female,20,Computer Science,A,3.97,2024-10-05,karen.mcconnell@university.edu
+449,Alan,Best,Male,23,Mechanical Engineering,B,2.3,2025-07-01,alan.best@university.edu
+450,Lisa,Hale,Male,25,Psychology,D,3.46,2022-02-01,lisa.hale@university.edu
+451,Rebekah,Nichols,Female,25,Chemistry,F,3.54,2023-08-05,rebekah.nichols@university.edu
+452,Jack,Ho,Male,23,Chemistry,A,2.4,2024-12-14,jack.ho@university.edu
+453,John,Gibbs,Female,25,Mathematics,D,2.34,2025-07-04,john.gibbs@university.edu
+454,Scott,Martinez,Female,22,Physics,B,4.0,2022-04-26,scott.martinez@university.edu
+455,Barbara,Smith,Male,23,Economics,D,2.82,2023-07-28,barbara.smith@university.edu
+456,Courtney,Bowman,Female,24,Economics,C,1.64,2025-05-19,courtney.bowman@university.edu
+457,John,Hester,Male,18,Business Administration,A,1.55,2023-12-18,john.hester@university.edu
+458,Christopher,Ruiz,Female,19,Mechanical Engineering,C,3.16,2023-08-18,christopher.ruiz@university.edu
+459,April,Martin,Male,24,Economics,A,2.31,2022-09-23,april.martin@university.edu
+460,Daniel,Mcguire,Female,24,Business Administration,C,2.27,2025-01-27,daniel.mcguire@university.edu
+461,Anthony,Mack,Female,24,Physics,D,2.47,2023-10-11,anthony.mack@university.edu
+462,Brian,Gilbert,Male,21,Chemistry,F,1.5,2025-06-23,brian.gilbert@university.edu
+463,Bryan,Gonzalez,Male,18,Mechanical Engineering,F,3.58,2023-02-12,bryan.gonzalez@university.edu
+464,Joshua,Merritt,Male,18,Chemistry,D,3.08,2023-03-10,joshua.merritt@university.edu
+465,Gregory,Goodwin,Male,20,Biology,D,2.52,2023-08-20,gregory.goodwin@university.edu
+466,Anita,Bryant,Male,25,Electrical Engineering,D,2.76,2022-02-06,anita.bryant@university.edu
+467,Mitchell,Stark,Female,24,Chemistry,B,1.6,2021-10-30,mitchell.stark@university.edu
+468,Robert,Jackson,Female,20,Physics,D,1.63,2024-04-03,robert.jackson@university.edu
+469,Nathan,Thomas,Male,24,Mathematics,A,2.69,2022-06-26,nathan.thomas@university.edu
+470,Jennifer,Mays,Female,19,Biology,C,3.98,2024-06-24,jennifer.mays@university.edu
+471,Joshua,Harvey,Male,22,Business Administration,C,3.54,2022-06-16,joshua.harvey@university.edu
+472,Ricardo,Carlson,Male,22,Mathematics,A,3.88,2023-05-24,ricardo.carlson@university.edu
+473,Jacob,Watts,Female,23,Computer Science,B,3.64,2022-06-14,jacob.watts@university.edu
+474,Donna,Maddox,Female,20,Biology,B,2.94,2025-03-04,donna.maddox@university.edu
+475,Amy,Anderson,Male,22,Economics,B,1.6,2025-02-27,amy.anderson@university.edu
+476,Emily,Powell,Female,21,Economics,D,3.95,2024-02-20,emily.powell@university.edu
+477,Colin,Harvey,Female,25,Computer Science,A,3.88,2023-08-13,colin.harvey@university.edu
+478,Ian,Buckley,Female,24,Psychology,D,2.79,2024-02-23,ian.buckley@university.edu
+479,James,Little,Male,20,Business Administration,A,3.83,2021-12-18,james.little@university.edu
+480,Rachel,Jensen,Male,24,Mathematics,A,2.34,2024-01-31,rachel.jensen@university.edu
+481,Christopher,Garcia,Male,21,Economics,D,3.62,2021-11-07,christopher.garcia@university.edu
+482,Kevin,Davidson,Male,25,Psychology,D,2.94,2021-12-05,kevin.davidson@university.edu
+483,Mary,Luna,Male,24,Business Administration,A,2.0,2025-09-18,mary.luna@university.edu
+484,Jennifer,Christian,Female,21,Economics,C,3.34,2025-03-04,jennifer.christian@university.edu
+485,Melissa,Ortiz,Male,24,Biology,A,2.8,2023-11-02,melissa.ortiz@university.edu
+486,Michelle,Hensley,Male,21,Mathematics,B,1.78,2022-07-13,michelle.hensley@university.edu
+487,Michael,Chapman,Female,20,Physics,F,3.82,2021-12-21,michael.chapman@university.edu
+488,Kevin,Flynn,Male,25,Mechanical Engineering,A,2.49,2024-06-25,kevin.flynn@university.edu
+489,Jeffrey,Wheeler,Female,23,Mathematics,F,1.68,2024-12-12,jeffrey.wheeler@university.edu
+490,Patrick,Curtis,Female,19,Biology,A,2.96,2024-06-13,patrick.curtis@university.edu
+491,Richard,Hernandez,Female,21,Mechanical Engineering,D,1.84,2024-10-13,richard.hernandez@university.edu
+492,Michael,Serrano,Female,25,Computer Science,F,3.25,2022-03-03,michael.serrano@university.edu
+493,Sherry,Hill,Female,21,Physics,C,3.94,2022-07-27,sherry.hill@university.edu
+494,Mariah,Reed,Female,19,Electrical Engineering,F,3.41,2023-08-06,mariah.reed@university.edu
+495,Jeffrey,Lee,Female,23,Chemistry,F,2.74,2024-07-30,jeffrey.lee@university.edu
+496,Gary,Powell,Female,23,Computer Science,B,3.58,2025-02-08,gary.powell@university.edu
+497,Kenneth,Harris,Male,25,Mechanical Engineering,C,1.55,2024-09-13,kenneth.harris@university.edu
+498,Bobby,Jones,Female,23,Computer Science,D,2.03,2023-04-30,bobby.jones@university.edu
+499,Jeffrey,Keller,Female,25,Biology,C,3.23,2025-05-21,jeffrey.keller@university.edu
+500,John,Love,Female,21,Psychology,A,3.87,2023-06-14,john.love@university.edu
+500,John,Love,Female,21,Psychology,A,3.87,2023-06-14,john.love@university.edu
+500,John,Love,Female,21,Psychology,A,3.87,2023-06-14,john.love@university.edu

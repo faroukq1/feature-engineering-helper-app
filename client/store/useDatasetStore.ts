@@ -13,6 +13,8 @@ type DatasetStore = {
   selectedDatasets: Dataset[];
   fileName: string;
   loading: boolean;
+  versions: { id: string; name: string; data: any[]; createdAt: string }[];
+  selectedVersionId: string | null;
 
   setMode: (mode: string) => void;
   setData: (data: any[]) => void;
@@ -27,6 +29,10 @@ type DatasetStore = {
   setFileName: (fileName: string) => void;
   setLoading: (loading: boolean) => void;
   clearDataset: () => void;
+  addVersion: (name: string, data: any[]) => void;
+  selectVersion: (id: string) => void;
+  deleteVersion: (id: string) => void;
+  clearVersions: () => void;
 };
 
 export const useDatasetStore = create<DatasetStore>()(
@@ -40,6 +46,8 @@ export const useDatasetStore = create<DatasetStore>()(
       selectedDatasets: [],
       fileName: "",
       loading: false,
+      versions: [],
+      selectedVersionId: null,
 
       setMode: (mode) => set({ mode }),
       setData: (data) => set({ data }),
@@ -71,6 +79,31 @@ export const useDatasetStore = create<DatasetStore>()(
       setFileName: (fileName) => set({ fileName }),
       setLoading: (loading) => set({ loading }),
       clearDataset: () => set({ data: [], fileName: "" }),
+      addVersion: (name, data) =>
+        set((state) => ({
+          versions: [
+            ...state.versions,
+            {
+              id: Math.random().toString(36).slice(2),
+              name,
+              data,
+              createdAt: new Date().toISOString(),
+            },
+          ],
+        })),
+      selectVersion: (id) =>
+        set((state) => {
+          const v = state.versions.find((x) => x.id === id);
+          if (!v) return state as any;
+          return { selectedVersionId: id, data: v.data } as any;
+        }),
+      deleteVersion: (id) =>
+        set((state) => ({
+          versions: state.versions.filter((v) => v.id !== id),
+          selectedVersionId:
+            state.selectedVersionId === id ? null : state.selectedVersionId,
+        })),
+      clearVersions: () => set({ versions: [], selectedVersionId: null }),
     }),
     {
       name: "dataset-store",

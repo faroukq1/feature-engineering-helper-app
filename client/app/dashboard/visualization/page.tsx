@@ -1,35 +1,8 @@
 "use client";
 
-import type React from "react";
-
 import { useState, useRef, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Switch } from "@/components/ui/switch";
-import { Upload, LineChartIcon, Download, FileSpreadsheet } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { LineChartIcon } from "lucide-react";
 import Papa from "papaparse";
 import {
   LineChart,
@@ -58,6 +31,7 @@ import {
 } from "recharts";
 import * as XLSX from "xlsx";
 import { useDatasetStore } from "@/store/useDatasetStore";
+import { VisualizationHeader, UploadPanel, ControlsPanel, ExportButtons, ChartCard, DataPreviewTable } from "./_components";
 
 type ChartType =
   | "line"
@@ -510,192 +484,51 @@ export default function VisualizePage() {
     <div className="w-full bg-background p-8">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <LineChartIcon className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold text-foreground">
-              Dataset Visualization
-            </h1>
-            {visualizeDataset ? (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span>•</span>
-                <span>Visualizing: {visualizeDataset.dataset_name}</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 text-sm text-amber-600">
-                <span>•</span>
-                <span>
-                  No dataset selected - please select one from the dashboard
-                </span>
-              </div>
-            )}
-          </div>
-          <p className="text-muted-foreground">
-            {visualizeDataset
-              ? "Explore your selected dataset visually"
-              : "Upload and explore your data visually"}
-          </p>
-        </div>
+        <VisualizationHeader datasetName={visualizeDataset?.dataset_name ?? null} />
 
         {/* File Upload Section - Only show if no dataset is selected */}
         {!visualizeDataset && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Upload Dataset</CardTitle>
-              <CardDescription>
-                Drag and drop or click to upload a CSV file
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div
-                onDrop={handleDrop}
-                onDragOver={(e) => e.preventDefault()}
-                onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-border rounded-lg p-12 text-center cursor-pointer hover:border-primary transition-colors"
-              >
-                <Upload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground mb-2">
-                  {fileName || "Drop your CSV file here or click to browse"}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Supports CSV files only
-                </p>
-                <Input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".csv"
-                  onChange={handleFileSelect}
-                  className="hidden"
-                />
-              </div>
-            </CardContent>
-          </Card>
+          <UploadPanel
+            onDrop={handleDrop}
+            onDragOver={(e) => e.preventDefault()}
+            onClick={() => fileInputRef.current?.click()}
+            fileInputRef={fileInputRef}
+            onFileSelect={handleFileSelect}
+            fileName={fileName}
+          />
         )}
         {/* Visualization Section */}
         {dataset.length > 0 && (
           <div ref={chartRef} className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Controls Panel */}
-            <Card className="lg:col-span-1">
-              <CardHeader>
-                <CardTitle>Visualization Controls</CardTitle>
-                <CardDescription>Configure your chart</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-2">
-                  <Label>X-Axis</Label>
-                  <Select value={xAxis} onValueChange={setXAxis}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {columns.map((col) => (
-                        <SelectItem key={col} value={col}>
-                          {col}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+            <ControlsPanel
+              columns={columns}
+              xAxis={xAxis}
+              yAxis={yAxis}
+              chartType={chartType}
+              showGrid={showGrid}
+              showLegend={showLegend}
+              showLabels={showLabels}
+              onXAxisChange={setXAxis}
+              onYAxisChange={setYAxis}
+              onChartTypeChange={setChartType}
+              onToggleGrid={setShowGrid}
+              onToggleLegend={setShowLegend}
+              onToggleLabels={setShowLabels}
+              renderActions={
+                <ExportButtons
+                  onExportPNG={exportChartAsPNG}
+                  onExportCSV={exportToCSV}
+                  onExportExcel={exportToExcel}
+                />
+              }
+            />
 
-                <div className="space-y-2">
-                  <Label>Y-Axis</Label>
-                  <Select value={yAxis} onValueChange={setYAxis}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {columns.map((col) => (
-                        <SelectItem key={col} value={col}>
-                          {col}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Chart Type</Label>
-                  <Select
-                    value={chartType}
-                    onValueChange={(v) => setChartType(v as ChartType)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="line">Line Chart</SelectItem>
-                      <SelectItem value="bar">Bar Chart</SelectItem>
-                      <SelectItem value="area">Area Chart</SelectItem>
-                      <SelectItem value="scatter">Scatter Plot</SelectItem>
-                      <SelectItem value="pie">Pie Chart</SelectItem>
-                      <SelectItem value="histogram">Histogram</SelectItem>
-                      <SelectItem value="stackedBar">Stacked Bar</SelectItem>
-                      <SelectItem value="stackedArea">Stacked Area</SelectItem>
-                      <SelectItem value="radar">Radar Chart</SelectItem>
-                      <SelectItem value="composed">
-                        Composed (Line + Bar)
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-4 pt-4 border-t">
-                  <div className="flex items-center justify-between">
-                    <Label>Show Grid</Label>
-                    <Switch checked={showGrid} onCheckedChange={setShowGrid} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <Label>Show Legend</Label>
-                    <Switch
-                      checked={showLegend}
-                      onCheckedChange={setShowLegend}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <Label>Show Labels</Label>
-                    <Switch
-                      checked={showLabels}
-                      onCheckedChange={setShowLabels}
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2 pt-4">
-                  <Button onClick={exportChartAsPNG} className="w-full">
-                    <Download className="h-4 w-4 mr-2" />
-                    Export Chart (PNG)
-                  </Button>
-                  <Button
-                    onClick={exportToCSV}
-                    variant="outline"
-                    className="w-full bg-transparent"
-                  >
-                    <FileSpreadsheet className="h-4 w-4 mr-2" />
-                    Export CSV
-                  </Button>
-                  <Button
-                    onClick={exportToExcel}
-                    variant="outline"
-                    className="w-full bg-transparent"
-                  >
-                    <FileSpreadsheet className="h-4 w-4 mr-2" />
-                    Export Excel
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Chart Display */}
-            <Card className="lg:col-span-3">
-              <CardHeader>
-                <CardTitle>Visualization</CardTitle>
-                <CardDescription>
-                  {chartType.charAt(0).toUpperCase() + chartType.slice(1)} chart
-                  of {yAxis} vs {xAxis}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>{renderChart()}</CardContent>
-            </Card>
+            <ChartCard
+              title="Visualization"
+              description={`${chartType.charAt(0).toUpperCase() + chartType.slice(1)} chart of ${yAxis} vs ${xAxis}`}
+            >
+              {renderChart()}
+            </ChartCard>
           </div>
         )}
 
@@ -718,36 +551,7 @@ export default function VisualizePage() {
         )}
         {/* Data Preview */}
         {dataset.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Data Preview</CardTitle>
-              <CardDescription>First 10 rows of your dataset</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      {columns.map((col) => (
-                        <TableHead key={col}>{col}</TableHead>
-                      ))}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {dataset.slice(0, 10).map((row, idx) => (
-                      <TableRow key={idx}>
-                        {columns.map((col) => (
-                          <TableCell key={col}>
-                            {row[col]?.toString() || "-"}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
+          <DataPreviewTable columns={columns} dataset={dataset} />
         )}
       </div>
     </div>

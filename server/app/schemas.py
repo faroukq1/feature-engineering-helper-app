@@ -53,5 +53,17 @@ class DataProcessingConfig(BaseModel):
     missing_data: Optional[MissingData] = None
     normalization: Optional[bool] = None
     standarization: Optional[bool] = None
-    remove_deblicate: Optional[bool] = None
+    remove_deplicate: Optional[bool] = None
+    target_columns: Optional[List[str]] = None
+
+
+class FusionRequest(BaseModel):
+    """
+    Request payload for dataset fusion.
+    You can provide either file_ids (with user_id) to load server-side datasets
+    or provide raw JSON datasets directly.
+    """
+    user_id: Optional[int] = None
+    file_ids: Optional[List[str]] = None
+    datasets: Optional[List[List[Dict[str, Any]]]] = None
 

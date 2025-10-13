@@ -2,33 +2,10 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Plus, Download, Trash2 } from "lucide-react";
+import { Plus, Download } from "lucide-react";
 import * as XLSX from "xlsx";
+import { SchemaBuilder, DataEditorTable, ExportActions } from "./_components";
 
 type AttributeType = "string" | "number" | "boolean" | "date";
 
@@ -140,7 +117,7 @@ export default function DatasetCreator() {
 
     if (isEditing) {
       return (
-        <Input
+        <input
           type={attr.type === "date" ? "date" : attr.type}
           value={value as string}
           onChange={(e) => {
@@ -233,188 +210,33 @@ export default function DatasetCreator() {
         </header>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          {/* Left Side - Schema Builder */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Schema Builder</CardTitle>
-              <CardDescription>
-                Define attributes for your dataset
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {tempAttributes.map((attr, index) => (
-                <div key={attr.id} className="flex gap-2">
-                  <div className="flex-1">
-                    <Label htmlFor={`name-${attr.id}`} className="sr-only">
-                      Attribute Name
-                    </Label>
-                    <Input
-                      id={`name-${attr.id}`}
-                      placeholder="Attribute name"
-                      value={attr.name}
-                      onChange={(e) =>
-                        updateTempAttribute(attr.id, "name", e.target.value)
-                      }
-                      className="border border-neutral-400"
-                    />
-                  </div>
-                  <div className="w-32">
-                    <Label htmlFor={`type-${attr.id}`} className="sr-only">
-                      Type
-                    </Label>
-                    <Select
-                      value={attr.type}
-                      onValueChange={(value) =>
-                        updateTempAttribute(attr.id, "type", value)
-                      }
-                    >
-                      <SelectTrigger
-                        id={`type-${attr.id}`}
-                        className="border border-neutral-400 w-full"
-                      >
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="string">String</SelectItem>
-                        <SelectItem value="number">Number</SelectItem>
-                        <SelectItem value="boolean">Boolean</SelectItem>
-                        <SelectItem value="date">Date</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  {tempAttributes.length > 1 && (
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => removeTempAttribute(attr.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-              ))}
+          <SchemaBuilder
+            tempAttributes={tempAttributes}
+            attributes={attributes}
+            onAddTemp={addTempAttribute}
+            onUpdateTemp={updateTempAttribute}
+            onRemoveTemp={removeTempAttribute}
+            onApplySchema={applySchema}
+          />
 
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  onClick={addTempAttribute}
-                  className="flex-1"
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Attribute
-                </Button>
-                <Button onClick={applySchema} className="flex-1">
-                  Apply Schema
-                </Button>
-              </div>
-
-              {attributes.length > 0 && (
-                <div className="rounded-lg border p-4">
-                  <h3 className="mb-2 font-semibold">Current Schema:</h3>
-                  <ul className="flex gap-4 space-y-1 text-sm">
-                    {attributes.map((attr) => (
-                      <li key={attr.id}>
-                        <span className="font-medium">{attr.name}</span>
-                        <span className="text-neutral-600"> ({attr.type})</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Right Side - Dynamic Table Editor */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Data Editor</CardTitle>
-              <CardDescription>
-                Add and edit rows in your dataset
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {attributes.length === 0 ? (
-                <div className="flex h-64 items-center justify-center rounded-lg border border-dashed">
-                  <p>No dataset schema defined yet</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <div className="overflow-auto rounded-lg border">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          {attributes.map((attr) => (
-                            <TableHead key={attr.id}>{attr.name}</TableHead>
-                          ))}
-                          <TableHead className="w-16"></TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {data.length === 0 ? (
-                          <TableRow>
-                            <TableCell
-                              colSpan={attributes.length + 1}
-                              className="text-center text-zinc-500"
-                            >
-                              No rows yet. Click "Add Row" to start.
-                            </TableCell>
-                          </TableRow>
-                        ) : (
-                          data.map((row) => (
-                            <TableRow key={row.id}>
-                              {attributes.map((attr) => (
-                                <TableCell key={attr.id}>
-                                  {renderEditableCell(row, attr)}
-                                </TableCell>
-                              ))}
-                              <TableCell>
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => deleteRow(row.id)}
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          ))
-                        )}
-                      </TableBody>
-                    </Table>
-                  </div>
-                  <Button onClick={addRow} className="w-full">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add Row
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          {attributes.length === 0 ? (
+            <div className="flex h-64 items-center justify-center rounded-lg border border-dashed">
+              <p>No dataset schema defined yet</p>
+            </div>
+          ) : (
+            <DataEditorTable
+              attributes={attributes}
+              data={data}
+              editingCell={editingCell}
+              setEditingCell={setEditingCell}
+              renderEditableCell={renderEditableCell}
+              onDeleteRow={deleteRow}
+              onAddRow={addRow}
+            />
+          )}
         </div>
 
-        {/* Footer - Export Options */}
-        <div className="mt-6 flex flex-col gap-4 rounded-lg border p-6 sm:flex-row">
-          <div className="flex-1">
-            <h3 className="font-semibold">Export Dataset</h3>
-            <p className="text-sm">
-              Download your dataset in CSV or Excel format
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              onClick={exportToCSV}
-              disabled={data.length === 0}
-              variant="outline"
-            >
-              <Download className="mr-2 h-4 w-4" />
-              Export as CSV
-            </Button>
-            <Button onClick={exportToExcel} disabled={data.length === 0}>
-              <Download className="mr-2 h-4 w-4" />
-              Export as Excel
-            </Button>
-          </div>
-        </div>
+        <ExportActions onExportCSV={exportToCSV} onExportExcel={exportToExcel} disabled={data.length === 0} />
       </div>
     </div>
   );

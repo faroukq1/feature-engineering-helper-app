@@ -3,7 +3,8 @@ from fastapi.responses import FileResponse
 import urllib.parse
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from app.schemas import UserCreate, UserLogin, DataProcessingConfig, SaveDatasetRequest
+from app.schemas import UserCreate, UserLogin, DataProcessingConfig, SaveDatasetRequest, FusionRequest
+
 from app.utils import hash_password, verify_password,  make_dataframe_json_safe, preprocess_dataframe
 from app import models
 from app.database import engine, SessionLocal
@@ -24,8 +25,11 @@ models.Base.metadata.create_all(bind=engine)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    # Accept requests from any origin (all paths) during development
+    # Note: When using wildcard origins, credentials must be disabled per CORS spec
+    allow_origins=[],
+    allow_origin_regex=".*",
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -42,7 +46,6 @@ def get_db():
 def read_root():
     """Root endpoint"""
     return {"message": "Data Processing API is running"}
-
 
 @app.post("/users/")
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
@@ -121,6 +124,9 @@ async def process_file(data: List[Dict[str, Any]], config: dict = None):
             parsed_config = DataProcessingConfig(**config)
             # operations based on given queries
             df = preprocess_dataframe(df, parsed_config)
+            # Sanitize again after preprocessing to ensure JSON-compliant values
+            df = make_dataframe_json_safe(df)
+            df = df.replace({np.nan: None})
         
         return {
             "config": parsed_config.model_dump() if parsed_config else None,
@@ -197,10 +203,10 @@ def get_user_files(user_id: int, db: Session = Depends(get_db)):
     Fetch all files uploaded by a specific user.
     """
     files = db.query(UserFile).filter(UserFile.user_id == user_id).all()
-    
+    # Return an empty list if the user has no files to avoid client-side stale state
     if not files:
-        raise HTTPException(status_code=404, detail="No files found for this user")
-    
+        return []
+
     # Convert ORM objects to dicts
     result = []
     for f in files:
@@ -211,7 +217,8 @@ def get_user_files(user_id: int, db: Session = Depends(get_db)):
             "file_size": f.file_size,
             "upload_date": f.upload_date,
             "data" : f.file_data,
-            "download_url": f"download/{f.file_id}"
+            # Use the actual filename to match the /downloads/{filename} endpoint
+            "download_url": f"downloads/{f.file_path}"
         })
     
     return result
@@ -285,4 +292,117 @@ async def update_dataset(
         "file_path": existing_file.file_path,
         "row_count": len(req.data),
         "download_url": f"download/{existing_file.file_path}",
+    }
+
+def _infer_type(value: Any) -> str:
+    if value is None:
+        return "null"
+    if isinstance(value, bool):
+        return "boolean"
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        return "number"
+    # try date
+    try:
+        if isinstance(value, str):
+            datetime.fromisoformat(value.replace("Z", "+00:00"))
+            return "date|string"
+    except Exception:
+        pass
+    return "string"
+
+@app.post("/fuse-datasets")
+def fuse_datasets(req: FusionRequest, db: Session = Depends(get_db)):
+    """
+    Fuse multiple datasets by validating they are uniform and identical in schema.
+    Accepts either `file_ids` (with `user_id`) to load datasets from DB or raw `datasets` as arrays of objects.
+    Returns can_fuse flag, diagnostics, and fused data when possible.
+    """
+    # Load datasets
+    datasets: List[List[Dict[str, Any]]] = []
+    diagnostics: List[str] = []
+
+    if req.file_ids:
+        if not req.user_id:
+            raise HTTPException(status_code=400, detail="user_id is required when using file_ids")
+        files: List[UserFile] = (
+            db.query(UserFile)
+            .filter(UserFile.file_id.in_(req.file_ids))
+            .all()
+        )
+        missing = set(req.file_ids) - {f.file_id for f in files}
+        if missing:
+            raise HTTPException(status_code=404, detail=f"Files not found: {', '.join(missing)}")
+        # Ownership check
+        not_owned = [f.file_id for f in files if f.user_id != req.user_id]
+        if not_owned:
+            raise HTTPException(status_code=403, detail=f"Access denied for files: {', '.join(not_owned)}")
+        datasets = [f.file_data or [] for f in files]
+    elif req.datasets:
+        datasets = req.datasets
+    else:
+        raise HTTPException(status_code=400, detail="Provide either file_ids or datasets")
+
+    if len(datasets) < 2:
+        raise HTTPException(status_code=400, detail="At least two datasets are required to fuse")
+
+    # Validate non-empty datasets
+    empty_idx = [i for i, d in enumerate(datasets) if not d]
+    if empty_idx:
+        diagnostics.append(f"Empty datasets at indices: {empty_idx}")
+
+    # Schema extraction from first dataset
+    def get_schema(ds: List[Dict[str, Any]]):
+        if not ds:
+            return [], {}
+        keys = list(ds[0].keys())
+        types: Dict[str, str] = {}
+        for k in keys:
+            # find first non-null value for type inference
+            v = next((row.get(k) for row in ds if row.get(k) is not None), None)
+            types[k] = _infer_type(v)
+        return keys, types
+
+    base_keys, base_types = get_schema(datasets[0])
+    if not base_keys:
+        raise HTTPException(status_code=400, detail="Base dataset has no columns")
+
+    # Validate each dataset schema
+    can_fuse = True
+    for idx, ds in enumerate(datasets[1:], start=1):
+        keys, types = get_schema(ds)
+        # identical columns set
+        if set(keys) != set(base_keys):
+            can_fuse = False
+            diagnostics.append(
+                f"Dataset {idx} columns mismatch. Expected {sorted(base_keys)}, got {sorted(keys)}"
+            )
+        # type compatibility per column
+        for col in set(base_keys) & set(keys):
+            bt = base_types.get(col)
+            ct = types.get(col)
+            if bt != ct:
+                # allow number vs string if convertible? Keep strict per request
+                diagnostics.append(f"Column '{col}' type mismatch: base={bt}, ds{idx}={ct}")
+                can_fuse = False
+
+    if not can_fuse:
+        return {
+            "can_fuse": False,
+            "diagnostics": diagnostics,
+            "schema": {"columns": base_keys, "types": base_types},
+        }
+
+    # Uniform and identical schema: concatenate rows
+    fused: List[Dict[str, Any]] = []
+    for ds in datasets:
+        # ensure column order consistency
+        for row in ds:
+            fused.append({k: row.get(k) for k in base_keys})
+
+    return {
+        "can_fuse": True,
+        "diagnostics": diagnostics,
+        "schema": {"columns": base_keys, "types": base_types},
+        "row_count": len(fused),
+        "data": fused,
     }
