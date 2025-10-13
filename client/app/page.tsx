@@ -9,10 +9,10 @@ import { useRouter } from "next/navigation";
 
 export default function DatasetLanding() {
   const router = useRouter();
-  const user = localStorage.getItem("user");
+  // const user = localStorage.getItem("user");
   const handleGoToDashboard = () => {
-    if (user) router.push("/dashboard");
-    else router.push("/login");
+    // if (user) router.push("/dashboard");
+    // else router.push("/login");
   };
 
   return (
