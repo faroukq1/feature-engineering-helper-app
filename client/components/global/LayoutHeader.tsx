@@ -1,11 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { Atom, LogOut } from "lucide-react";
 import Navbar from "./Navbar";
 import { ToggleModeButton } from "./ToggleModeButton";
 import { useRouter } from "next/navigation";
 import { Separator } from "../ui/separator";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 const LayoutHeader = () => {
   const router = useRouter();
@@ -39,9 +41,9 @@ const LayoutHeader = () => {
     <div>
       <div className="px-10 py-4 flex justify-between">
         <div className="flex-1 flex items-center gap-2">
-          <Button variant="default" size="icon">
-            <Atom className="size-6" />
-          </Button>
+          <Link href="/" className={cn(buttonVariants({ variant: "outline" }))}>
+            <Atom className="size-4" />
+          </Link>
           <div className="flex-1">
             <Navbar />
           </div>
