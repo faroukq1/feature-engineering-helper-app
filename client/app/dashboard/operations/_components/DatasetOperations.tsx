@@ -253,7 +253,7 @@ export default function DataCleaningOperations() {
 
   return (
     <Form {...form}>
-      <div className="flex flex-col justify-between w-[380px] max-h-[600px] overflow-y-auto border p-6 rounded-lg shadow-sm mt-5 mr-5">
+      <div className="flex flex-col justify-between w-[380px] max-h-[600px] overflow-y-auto border p-6 rounded-lg shadow-sm mt-5">
         <div className="space-y-4">
           <div className="space-y-1">
             <h3 className="text-lg font-semibold">Data Cleaning</h3>

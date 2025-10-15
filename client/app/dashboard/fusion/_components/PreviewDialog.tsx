@@ -21,12 +21,14 @@ export default function PreviewDialog({ open, dataset, getColumns, onOpenChange 
         </DialogHeader>
         {dataset && (
           <div className="border rounded-lg overflow-hidden">
-            <div className="max-h[400px] overflow-auto">
+            <div className="w-full max-h-[400px] overflow-auto">
               <Table>
-                <TableHeader className="sticky top-0">
+                <TableHeader className="sticky top-0 bg-background z-10">
                   <TableRow>
                     {getColumns(dataset).map((column) => (
-                      <TableHead key={column}>{column}</TableHead>
+                      <TableHead key={column} className="min-w-[120px] max-w-[250px]">
+                        <div className="truncate" title={column}>{column}</div>
+                      </TableHead>
                     ))}
                   </TableRow>
                 </TableHeader>
@@ -34,7 +36,9 @@ export default function PreviewDialog({ open, dataset, getColumns, onOpenChange 
                   {dataset.data.slice(0, 10).map((row, idx) => (
                     <TableRow key={idx}>
                       {getColumns(dataset).map((column) => (
-                        <TableCell key={column}>{String(row[column])}</TableCell>
+                        <TableCell key={column} className="min-w-[120px] max-w-[250px]">
+                          <div className="truncate" title={String(row[column])}>{String(row[column])}</div>
+                        </TableCell>
                       ))}
                     </TableRow>
                   ))}

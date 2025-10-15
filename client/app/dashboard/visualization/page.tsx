@@ -31,7 +31,14 @@ import {
 } from "recharts";
 import * as XLSX from "xlsx";
 import { useDatasetStore } from "@/store/useDatasetStore";
-import { VisualizationHeader, UploadPanel, ControlsPanel, ExportButtons, ChartCard, DataPreviewTable } from "./_components";
+import {
+  VisualizationHeader,
+  UploadPanel,
+  ControlsPanel,
+  ExportButtons,
+  ChartCard,
+  DataPreviewTable,
+} from "./_components";
 
 type ChartType =
   | "line"
@@ -484,7 +491,9 @@ export default function VisualizePage() {
     <div className="w-full bg-background p-8">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
-        <VisualizationHeader datasetName={visualizeDataset?.dataset_name ?? null} />
+        <VisualizationHeader
+          datasetName={visualizeDataset?.dataset_name ?? null}
+        />
 
         {/* File Upload Section - Only show if no dataset is selected */}
         {!visualizeDataset && (
@@ -525,7 +534,9 @@ export default function VisualizePage() {
 
             <ChartCard
               title="Visualization"
-              description={`${chartType.charAt(0).toUpperCase() + chartType.slice(1)} chart of ${yAxis} vs ${xAxis}`}
+              description={`${
+                chartType.charAt(0).toUpperCase() + chartType.slice(1)
+              } chart of ${yAxis} vs ${xAxis}`}
             >
               {renderChart()}
             </ChartCard>
@@ -557,3 +568,4 @@ export default function VisualizePage() {
     </div>
   );
 }
+``;

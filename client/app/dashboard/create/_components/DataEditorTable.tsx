@@ -31,12 +31,14 @@ export default function DataEditorTable({
 }: DataEditorTableProps) {
   return (
     <div className="space-y-4">
-      <div className="overflow-auto rounded-lg border">
+      <div className="w-full max-h-[600px] overflow-auto rounded-lg border">
         <Table>
-          <TableHeader>
+          <TableHeader className="sticky top-0 bg-background z-10">
             <TableRow>
               {attributes.map((attr) => (
-                <TableHead key={attr.id}>{attr.name}</TableHead>
+                <TableHead key={attr.id} className="min-w-[120px] max-w-[250px]">
+                  <div className="truncate" title={attr.name}>{attr.name}</div>
+                </TableHead>
               ))}
               <TableHead className="w-16"></TableHead>
             </TableRow>
@@ -52,7 +54,9 @@ export default function DataEditorTable({
               data.map((row) => (
                 <TableRow key={row.id}>
                   {attributes.map((attr) => (
-                    <TableCell key={attr.id}>{renderEditableCell(row, attr)}</TableCell>
+                    <TableCell key={attr.id} className="min-w-[120px] max-w-[250px]">
+                      <div className="truncate">{renderEditableCell(row, attr)}</div>
+                    </TableCell>
                   ))}
                   <TableCell>
                     <Button variant="ghost" size="icon" onClick={() => onDeleteRow(row.id)}>

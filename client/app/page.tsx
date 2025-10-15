@@ -6,13 +6,20 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Zap, Grid3x3, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 export default function DatasetLanding() {
   const router = useRouter();
-  // const user = localStorage.getItem("user");
+  const [user, setUser] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    setUser(storedUser);
+  }, []);
+
   const handleGoToDashboard = () => {
-    // if (user) router.push("/dashboard");
-    // else router.push("/login");
+    if (user) router.push("/dashboard");
+    else router.push("/login");
   };
 
   return (

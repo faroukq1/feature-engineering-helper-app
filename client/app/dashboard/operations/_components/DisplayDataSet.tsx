@@ -25,19 +25,19 @@ const DisplayDataSet = () => {
   }
 
   return (
-    <div className="min-h-[490px] max-h-[490px] w-full rounded-sm flex flex-col">
+    <div className="min-h-[490px] max-h-[460px] w-full rounded-sm flex flex-col">
       {data.length > 0 ? (
         <div className="flex flex-col h-full min-h-0">
-          <div className="flex-1 overflow-auto border rounded-md min-h-0">
-            <Table className="min-w-max">
+          <div className="flex-1 w-full overflow-auto border rounded-md min-h-0">
+            <Table>
               <TableHeader>
                 <TableRow>
                   {Object.keys(data[0]).map((key) => (
                     <TableHead
                       key={key}
-                      className="whitespace-nowrap font-semibold bg-background sticky top-0 z-10"
+                      className="font-semibold bg-background sticky top-0 z-10 min-w-[120px] max-w-[250px]"
                     >
-                      {key}
+                      <div className="truncate" title={key}>{key}</div>
                     </TableHead>
                   ))}
                 </TableRow>
@@ -48,11 +48,13 @@ const DisplayDataSet = () => {
                     {Object.keys(data[0]).map((key) => (
                       <TableCell
                         key={`${i}-${key}`}
-                        className="whitespace-nowrap"
+                        className="min-w-[120px] max-w-[250px]"
                       >
-                        {row[key] !== null && row[key] !== undefined
-                          ? String(row[key])
-                          : ""}
+                        <div className="truncate" title={String(row[key] ?? "")}>
+                          {row[key] !== null && row[key] !== undefined
+                            ? String(row[key])
+                            : ""}
+                        </div>
                       </TableCell>
                     ))}
                   </TableRow>

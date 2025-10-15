@@ -406,3 +406,196 @@ def fuse_datasets(req: FusionRequest, db: Session = Depends(get_db)):
         "row_count": len(fused),
         "data": fused,
     }
+
+
+@app.post("/fuse-datasets") 
+def fuse_datasets(req: FusionRequest, db: Session = Depends(get_db)): 
+    """
+    Fuse multiple datasets by validating they are uniform and identical in schema.
+    Accepts either `file_ids` (with `user_id`) to load datasets from DB or raw `datasets` as arrays of objects.
+    Returns can_fuse flag, diagnostics, and fused data when possible.
+    """
+    # Load datasets
+    datasets: List[List[Dict[str, Any]]] = []
+    diagnostics: List[str] = []
+
+    if req.file_ids:
+        if not req.user_id:
+            raise HTTPException(status_code=400, detail="user_id is required when using file_ids")
+        files: List[UserFile] = (
+            db.query(UserFile)
+            .filter(UserFile.file_id.in_(req.file_ids))
+            .all()
+        )
+        missing = set(req.file_ids) - {f.file_id for f in files}
+        if missing:
+            raise HTTPException(status_code=404, detail=f"Files not found: {', '.join(missing)}")
+        # Ownership check
+        not_owned = [f.file_id for f in files if f.user_id != req.user_id]
+        if not_owned:
+            raise HTTPException(status_code=403, detail=f"Access denied for files: {', '.join(not_owned)}")
+        datasets = [f.file_data or [] for f in files]
+    elif req.datasets:
+        datasets = req.datasets
+    else:
+        raise HTTPException(status_code=400, detail="Provide either file_ids or datasets")
+
+    if len(datasets) < 2:
+        raise HTTPException(status_code=400, detail="At least two datasets are required to fuse")
+
+    # Validate non-empty datasets
+    empty_idx = [i for i, d in enumerate(datasets) if not d]
+    if empty_idx:
+        diagnostics.append(f"Empty datasets at indices: {empty_idx}")
+
+    # Schema extraction from first dataset
+    def get_schema(ds: List[Dict[str, Any]]):
+        if not ds:
+            return [], {}
+        keys = list(ds[0].keys())
+        types: Dict[str, str] = {}
+        for k in keys:
+            # find first non-null value for type inference
+            v = next((row.get(k) for row in ds if row.get(k) is not None), None)
+            types[k] = _infer_type(v)
+        return keys, types
+
+    base_keys, base_types = get_schema(datasets[0])
+    if not base_keys:
+        raise HTTPException(status_code=400, detail="Base dataset has no columns")
+
+    # Validate each dataset schema
+    can_fuse = True
+    for idx, ds in enumerate(datasets[1:], start=1):
+        keys, types = get_schema(ds)
+        # identical columns set
+        if set(keys) != set(base_keys):
+            can_fuse = False
+            diagnostics.append(
+                f"Dataset {idx} columns mismatch. Expected {sorted(base_keys)}, got {sorted(keys)}"
+            )
+        # type compatibility per column
+        for col in set(base_keys) & set(keys):
+            bt = base_types.get(col)
+            ct = types.get(col)
+            if bt != ct:
+                diagnostics.append(f"Column '{col}' type mismatch: base={bt}, ds{idx}={ct}")
+                can_fuse = False
+
+    if not can_fuse:
+        return {
+            "can_fuse": False,
+            "diagnostics": diagnostics,
+            "schema": {"columns": base_keys, "types": base_types},
+        }
+
+    # Uniform and identical schema: concatenate rows
+    fused: List[Dict[str, Any]] = []
+    for ds in datasets:
+        for row in ds:
+            fused.append({k: row.get(k) for k in base_keys})
+
+    return {
+        "can_fuse": True,
+        "diagnostics": diagnostics,
+        "schema": {"columns": base_keys, "types": base_types},
+        "row_count": len(fused),
+        "data": fused,
+    }
+
+@app.post("/fuse-datasets")
+def fuse_datasets(req: FusionRequest, db: Session = Depends(get_db)):
+    """
+    Fuse multiple datasets by validating they are uniform and identical in schema.
+    Accepts either `file_ids` (with `user_id`) to load datasets from DB or raw `datasets` as arrays of objects.
+    Returns can_fuse flag, diagnostics, and fused data when possible.
+    """
+    # Load datasets
+    datasets: List[List[Dict[str, Any]]] = []
+    diagnostics: List[str] = []
+
+    if req.file_ids:
+        if not req.user_id:
+            raise HTTPException(status_code=400, detail="user_id is required when using file_ids")
+        files: List[UserFile] = (
+            db.query(UserFile)
+            .filter(UserFile.file_id.in_(req.file_ids))
+            .all()
+        )
+        missing = set(req.file_ids) - {f.file_id for f in files}
+        if missing:
+            raise HTTPException(status_code=404, detail=f"Files not found: {', '.join(missing)}")
+        # Ownership check
+        not_owned = [f.file_id for f in files if f.user_id != req.user_id]
+        if not_owned:
+            raise HTTPException(status_code=403, detail=f"Access denied for files: {', '.join(not_owned)}")
+        datasets = [f.file_data or [] for f in files]
+    elif req.datasets:
+        datasets = req.datasets
+    else:
+        raise HTTPException(status_code=400, detail="Provide either file_ids or datasets")
+
+    if len(datasets) < 2:
+        raise HTTPException(status_code=400, detail="At least two datasets are required to fuse")
+
+    # Validate non-empty datasets
+    empty_idx = [i for i, d in enumerate(datasets) if not d]
+    if empty_idx:
+        diagnostics.append(f"Empty datasets at indices: {empty_idx}")
+
+    # Schema extraction from first dataset
+    def get_schema(ds: List[Dict[str, Any]]):
+        if not ds:
+            return [], {}
+        keys = list(ds[0].keys())
+        types: Dict[str, str] = {}
+        for k in keys:
+            # find first non-null value for type inference
+            v = next((row.get(k) for row in ds if row.get(k) is not None), None)
+            types[k] = _infer_type(v)
+        return keys, types
+
+    base_keys, base_types = get_schema(datasets[0])
+    if not base_keys:
+        raise HTTPException(status_code=400, detail="Base dataset has no columns")
+
+    # Validate each dataset schema
+    can_fuse = True
+    for idx, ds in enumerate(datasets[1:], start=1):
+        keys, types = get_schema(ds)
+        # identical columns set
+        if set(keys) != set(base_keys):
+            can_fuse = False
+            diagnostics.append(
+                f"Dataset {idx} columns mismatch. Expected {sorted(base_keys)}, got {sorted(keys)}"
+            )
+        # type compatibility per column
+        for col in set(base_keys) & set(keys):
+            bt = base_types.get(col)
+            ct = types.get(col)
+            if bt != ct:
+                diagnostics.append(f"Column '{col}' type mismatch: base={bt}, ds{idx}={ct}")
+                can_fuse = False
+
+    if not can_fuse:
+        return {
+            "can_fuse": False,
+            "diagnostics": diagnostics,
+            "schema": {"columns": base_keys, "types": base_types},
+        }
+
+    # Uniform and identical schema: concatenate rows
+    fused: List[Dict[str, Any]] = []
+    for ds in datasets:
+        # ensure column order consistency
+        for row in ds:
+            fused.append({k: row.get(k) for k in base_keys})
+
+    return {
+        "can_fuse": True,
+        "diagnostics": diagnostics,
+        "schema": {"columns": base_keys, "types": base_types},
+        "row_count": len(fused),
+        "data": fused,
+    }
+

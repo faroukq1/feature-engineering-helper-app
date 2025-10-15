@@ -49,12 +49,14 @@ export default function FusedDatasetSection({ fusedData, isSaving, onSave, onExp
               </Button>
             </div>
             <div className="border rounded-lg overflow-hidden">
-              <div className="max-h-[500px] overflow-auto">
+              <div className="w-full max-h-[500px] overflow-auto">
                 <Table>
-                  <TableHeader className="sticky top-0">
+                  <TableHeader className="sticky top-0 bg-background z-10">
                     <TableRow>
                       {Object.keys(fusedData[0] || {}).map((column) => (
-                        <TableHead key={column}>{column}</TableHead>
+                        <TableHead key={column} className="min-w-[120px] max-w-[250px]">
+                          <div className="truncate" title={column}>{column}</div>
+                        </TableHead>
                       ))}
                     </TableRow>
                   </TableHeader>
@@ -62,7 +64,9 @@ export default function FusedDatasetSection({ fusedData, isSaving, onSave, onExp
                     {fusedData.slice(0, 100).map((row, idx) => (
                       <TableRow key={idx}>
                         {Object.values(row).map((value, cellIdx) => (
-                          <TableCell key={cellIdx}>{String(value)}</TableCell>
+                          <TableCell key={cellIdx} className="min-w-[120px] max-w-[250px]">
+                            <div className="truncate" title={String(value)}>{String(value)}</div>
+                          </TableCell>
                         ))}
                       </TableRow>
                     ))}

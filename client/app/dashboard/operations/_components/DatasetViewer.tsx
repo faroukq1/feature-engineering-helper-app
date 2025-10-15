@@ -9,7 +9,7 @@ const DatasetViewer = () => {
     useDatasetStore();
 
   return (
-    <div className="flex flex-1 flex-col p-6">
+    <div className="flex flex-col p-6 h-full">
       <div className="flex h-full flex-col space-y-4">
         <Tabs value={mode} onValueChange={setMode}>
           <TabsList className="w-1/3">
