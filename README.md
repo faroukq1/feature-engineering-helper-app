@@ -2,7 +2,7 @@
 
 A powerful desktop application for **automated dataset preprocessing, visualization, and fusion** — built with **Next.js**, **FastAPI**, and **Electron**.
 
-![Dashboard](./pictures/dashboard.PNG)
+![Dashboard](./client/public/dashboard.PNG)
 
 ## 📋 Table of Contents
 
@@ -209,7 +209,7 @@ feature-engineering-helper-app/
 
 ### 🔐 User Authentication
 
-![Register](./pictures/register.PNG)
+![Register](./client/public/register.PNG)
 
 **Registration System:**
 - Validates unique email addresses to prevent duplicates
@@ -217,7 +217,7 @@ feature-engineering-helper-app/
 - Stores user information (first name, last name, email)
 - Returns success confirmation with user ID
 
-![Login](./pictures/login.PNG)
+![Login](./client/public/login.PNG)
 
 **Login System:**
 - Authenticates users by email and password
@@ -231,8 +231,8 @@ feature-engineering-helper-app/
 
 ### 📊 Dataset Management
 
-![Dashboard](./pictures/dashboard.PNG)
-![Drawer](./pictures/drawer.PNG)
+![Dashboard](./client/public/dashboard.PNG)
+![Drawer](./client/public/drawer.PNG)
 
 **File Upload & Processing:**
 - Supports CSV and Excel (.xlsx/.xls) file formats
@@ -246,7 +246,7 @@ feature-engineering-helper-app/
 
 ### 🛠️ Data Preprocessing Operations
 
-![Operations](./pictures/operations.PNG)
+![Operations](./client/public/operations.PNG)
 
 **Available Operations:**
 - **Remove Duplicates:** Eliminates duplicate rows from the dataset
@@ -261,7 +261,7 @@ The preprocessing pipeline automatically detects numeric columns and applies tra
 
 ### 🔗 Dataset Fusion
 
-![Fusion](./pictures/fusion.PNG)
+![Fusion](./client/public/fusion.PNG)
 
 **Intelligent Merging:**
 - Combines multiple datasets into one unified dataset
@@ -276,9 +276,9 @@ This feature prevents data corruption by strictly validating schema compatibilit
 
 ### 📈 Data Visualization
 
-![Line Chart](./pictures/line.PNG)
-![Histogram](./pictures/histo.PNG)
-![Pie Chart](./pictures/pie.PNG)
+![Line Chart](./client/public/line.PNG)
+![Histogram](./client/public/histo.PNG)
+![Pie Chart](./client/public/pie.PNG)
 
 **Interactive Charting:**
 - **Multiple Chart Types:** Line, Bar, Pie, Scatter, Area, Radar, Histogram
