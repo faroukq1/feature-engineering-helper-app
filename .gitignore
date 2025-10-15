@@ -1,0 +1,131 @@
+# ==========================================
+# GENERAL
+# ==========================================
+.DS_Store
+*.log
+*.pem
+*.key
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ==========================================
+# CLIENT (Next.js + Electron)
+# ==========================================
+
+# Dependencies
+client/node_modules/
+client/.pnp
+client/.pnp.*
+client/.yarn/*
+!client/.yarn/patches
+!client/.yarn/plugins
+!client/.yarn/releases
+!client/.yarn/versions
+
+# Testing
+client/coverage/
+
+# Next.js
+client/.next/
+client/out/
+
+# Production
+client/build/
+client/dist/
+
+# Debug
+client/npm-debug.log*
+client/yarn-debug.log*
+client/yarn-error.log*
+client/.pnpm-debug.log*
+
+# Vercel
+client/.vercel
+
+# TypeScript
+client/*.tsbuildinfo
+client/next-env.d.ts
+
+# Electron
+client/dist-electron/
+client/release/
+
+# ==========================================
+# SERVER (Python/FastAPI)
+# ==========================================
+
+# Python
+server/__pycache__/
+server/*.py[cod]
+server/*$py.class
+server/*.so
+server/.Python
+server/env/
+server/venv/
+server/ENV/
+server/env.bak/
+server/venv.bak/
+
+# Distribution / packaging
+server/.Python
+server/build/
+server/develop-eggs/
+server/dist/
+server/downloads/
+server/eggs/
+server/.eggs/
+server/lib/
+server/lib64/
+server/parts/
+server/sdist/
+server/var/
+server/wheels/
+server/*.egg-info/
+server/.installed.cfg
+server/*.egg
+
+# PyInstaller
+server/*.manifest
+server/*.spec
+
+# Unit test / coverage
+server/htmlcov/
+server/.tox/
+server/.coverage
+server/.coverage.*
+server/.cache
+server/nosetests.xml
+server/coverage.xml
+server/*.cover
+server/.hypothesis/
+server/.pytest_cache/
+
+# Jupyter Notebook
+server/.ipynb_checkpoints
+
+# pyenv
+server/.python-version
+
+# Database
+server/*.db
+server/*.sqlite
+server/*.sqlite3
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
